@@ -41,23 +41,31 @@
           try {
             var payload = JSON.parse(xhr.response);
             var message = payload.message;
-            var title = payload.title;
+            var titleText = payload.title;
+            var bodyText = payload.body;
 
             // Workaround IE 11 lack of support for new URL()
             var url = document.createElement("a");
-            url.setAttribute("href", title);
+            url.setAttribute("href", titleText);
 
             // Invalid URLs includes invalid issue numbers, issue titles that are not URLs, and recursive destination URLs
             var isInvalidUrl =
               message === "Not Found" ||
-              !title ||
-              !isUrl(title) ||
+              !titleText ||
+              !isUrl(titleText) ||
               url.hostname === location.hostname;
 
             if (isInvalidUrl) {
-              location.replace(homepage);
+              let titleObj = document.createElement('h1');
+              titleObj.innerText = titleText;
+              let bodyObj = document.createElement('p');
+              bodyObj.innerText = bodyText;
+
+              document.body.appendChild(titleObj);
+              document.body.appendChild(bodyObj);
+              // location.replace(homepage);
             } else {
-              location.replace(title);
+              location.replace(titleText);
             }
           } catch (e) {
             location.replace(homepage);
