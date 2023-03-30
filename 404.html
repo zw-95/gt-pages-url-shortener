@@ -2,7 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Redirecting...</title>
+    <title>跳转中...</title>
+    <script src="base64.js"></script>
     <script>
       /**
        * Configuration goes here
@@ -24,9 +25,9 @@
 
       function redirect() {
         var location = window.location;
-        var issueNumber = location.pathname.split("/")[
+        var issueNumber = Base64.decode(location.pathname.split("/")[
           PATH_SEGMENTS_TO_SKIP + 1
-        ];
+        ]);
         var homepage =
           location.protocol +
           "//" +
