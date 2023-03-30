@@ -2,7 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>跳转中...</title>
+    <title>短连接</title>
+    <style>
+      .box { background: #a0a0a035; border-radius: 10px; margin: 5% 5% 0 5%;
+      }
+      .titleText {padding: 2% 2% 2% 2%;}
+      .bodyText {padding: 0% 2% 2% 2%; font-size: 20px;}
+    </style>
+    <style type="text/css">
+      body{
+        background: url("https://files.getquicker.net/_sitefiles/_guides/52593d69-c99a-4367-8b98-08d9a65be47e/2021/11/19/173031_202824_b1.png") no-repeat right top fixed;background-size: 88%;
+      }
+      </style>
     <script>
       /**
        * Configuration goes here
@@ -56,15 +67,23 @@
               url.hostname === location.hostname;
 
             if (isInvalidUrl) {
+              document.title = titleText;
+              let divObj = document.createElement('div');
+              divObj.className = 'box';
+
               let titleObj = document.createElement('h1');
+              titleObj.className = 'titleText';
               titleObj.innerText = titleText;
               let bodyObj = document.createElement('p');
+              bodyObj.className = 'bodyText';
               bodyObj.innerText = bodyText;
 
-              document.body.appendChild(titleObj);
-              document.body.appendChild(bodyObj);
+              divObj.appendChild(titleObj);
+              divObj.appendChild(bodyObj);
+              document.body.appendChild(divObj);
               // location.replace(homepage);
             } else {
+              document.title = '跳转中...';
               location.replace(titleText);
             }
           } catch (e) {
