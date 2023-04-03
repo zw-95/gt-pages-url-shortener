@@ -43,6 +43,15 @@
       }
 
       function redirect() {
+        GITHUB_ISSUES_LINK = atob('aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy96dy05NS9zaG9ydHVybC1kYi9pc3N1ZXMv')
+        location= window.location;
+        homepage=
+        location.protocol +
+        '//' +
+        location.hostname +
+        (location.port ? ':' + location.port : '') +
+        '/' +
+        location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP];
         var issueNumber = atob(location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP + 1]);
         var xhr = new XMLHttpRequest();
 
@@ -103,19 +112,10 @@
         xhr.send();
       }
 
-      try {
         var GITHUB_ISSUES_LINK ;
         var PATH_SEGMENTS_TO_SKIP = 0;
         var location, homepage ;
-        GITHUB_ISSUES_LINK = atob('aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy96dy05NS9zaG9ydHVybC1kYi9pc3N1ZXMv')
-        location= window.location;
-        homepage=
-        location.protocol +
-        '//' +
-        location.hostname +
-        (location.port ? ':' + location.port : '') +
-        '/' +
-        location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP];
+      try {
         redirect();
       } catch (e) {
         console.error(e);
