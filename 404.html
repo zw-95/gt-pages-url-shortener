@@ -21,7 +21,8 @@
     <style type="text/css">
       body{
         font-family: Consolas;
-        background: url("./assets/bg.png") no-repeat right top fixed;background-size: 88%;
+        background-image: linear-gradient(90deg, #FFFFFF, #D8D8D8);
+        /* background: url("./assets/bg.png") no-repeat ;background-size: 100%; */
       }
       </style>
     <script>
@@ -60,52 +61,55 @@
 
         xhr.onload = function () {
           try {
-            var payload = JSON.parse(xhr.response);
-            var message = payload.message;
-            var titleText = payload.title;
-            var bodyText = payload.body;
-            var timeText = payload.updated_at;
+            if(xhr.status === 200){
+              var payload = JSON.parse(xhr.response);
+              var message = payload.message;
+              var titleText = payload.title;
+              var bodyText = payload.body;
+              var timeText = payload.updated_at;
 
-            // Workaround IE 11 lack of support for new URL()
-            var url = document.createElement("a");
-            url.setAttribute("href", titleText);
+              // Workaround IE 11 lack of support for new URL()
+              var url = document.createElement("a");
+              url.setAttribute("href", titleText);
 
-            // Invalid URLs includes invalid issue numbers, issue titles that are not URLs, and recursive destination URLs
-            var isInvalidUrl =
-              message === "Not Found" ||
-              !titleText ||
-              !isUrl(titleText) ||
-              url.hostname === location.hostname;
+              // Invalid URLs includes invalid issue numbers, issue titles that are not URLs, and recursive destination URLs
+              var isInvalidUrl =
+                message === "Not Found" ||
+                !titleText ||
+                !isUrl(titleText) ||
+                url.hostname === location.hostname;
 
-            if (isInvalidUrl) {
-              document.title = titleText;
-              let divObj = document.createElement('div');
-              divObj.className = 'box';
+              if (isInvalidUrl) {
+                document.title = titleText;
+                let divObj = document.createElement('div');
+                divObj.className = 'box';
 
-              let titleObj = document.createElement('h1');
-              titleObj.className = 'titleText';
-              titleObj.innerText = titleText;
+                let titleObj = document.createElement('h1');
+                titleObj.className = 'titleText';
+                titleObj.innerText = titleText;
 
-              let timeObj = document.createElement('p');
-              timeObj.className = 'timeText';
-              let textTime = new Date(timeText);
+                let timeObj = document.createElement('p');
+                timeObj.className = 'timeText';
+                let textTime = new Date(timeText);
 
-              timeObj.innerText = textTime.getFullYear() + '年' + (textTime.getMonth() + 1) + '月' + textTime.getDay() +'日 ' + textTime.toLocaleTimeString();
+                timeObj.innerText = textTime.getFullYear() + '年' + (textTime.getMonth() + 1) + '月' + textTime.getDay() +'日 ' + textTime.toLocaleTimeString();
 
-              let bodyObj = document.createElement('p');
-              bodyObj.className = 'bodyText';
-              bodyObj.innerText = bodyText;
+                let bodyObj = document.createElement('p');
+                bodyObj.className = 'bodyText';
+                bodyObj.innerText = bodyText;
 
-              divObj.appendChild(titleObj);
-              divObj.appendChild(timeObj);
-              divObj.appendChild(bodyObj);
-              document.body.appendChild(divObj);
-            } else {
-              document.title = '跳转中...';
-              location.replace(titleText);
+                divObj.appendChild(titleObj);
+                divObj.appendChild(timeObj);
+                divObj.appendChild(bodyObj);
+                document.body.appendChild(divObj);
+              } else {
+                document.title = '跳转中...';
+                location.replace(titleText);
+              }
             }
           } catch (e) {
             location.replace(homepage);
+            console.error(e);
           }
         };
 
