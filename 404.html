@@ -115,7 +115,8 @@
               location.replace(titleText);
             }
           } else {
-            throw Error(xhr.status+' '+xhr.response);
+            console.error(xhr.status+' '+xhr.response);
+            returnHome();
           }
         };
 
