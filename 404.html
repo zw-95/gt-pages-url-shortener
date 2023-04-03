@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <link rel="icon" href="./assets/logo.png">
     <title>短连接</title>
     <style>
       .box {
@@ -15,10 +16,12 @@
       }
       .titleText {padding: 0% 2% 0% 2%;}
       .bodyText {padding: 0% 2% 0% 2%; font-size: 20px;}
+      .timeText {padding: 0% 2% 0% 2%; font-size: 16px;color: rgb(69, 69, 69);}
     </style>
     <style type="text/css">
       body{
-        background: url("https://files.getquicker.net/_sitefiles/_guides/52593d69-c99a-4367-8b98-08d9a65be47e/2021/11/19/173031_202824_b1.png") no-repeat right top fixed;background-size: 88%;
+        font-family: Consolas;
+        background: url("./assets/bg.png") no-repeat right top fixed;background-size: 88%;
       }
       </style>
     <script>
@@ -61,6 +64,7 @@
             var message = payload.message;
             var titleText = payload.title;
             var bodyText = payload.body;
+            var timeText = payload.updated_at;
 
             // Workaround IE 11 lack of support for new URL()
             var url = document.createElement("a");
@@ -81,14 +85,21 @@
               let titleObj = document.createElement('h1');
               titleObj.className = 'titleText';
               titleObj.innerText = titleText;
+
+              let timeObj = document.createElement('p');
+              timeObj.className = 'timeText';
+              let textTime = new Date(timeText);
+
+              timeObj.innerText = textTime.getFullYear() + '年' + (textTime.getMonth() + 1) + '月' + textTime.getDay() +'日 ' + textTime.toLocaleTimeString();
+
               let bodyObj = document.createElement('p');
               bodyObj.className = 'bodyText';
               bodyObj.innerText = bodyText;
 
               divObj.appendChild(titleObj);
+              divObj.appendChild(timeObj);
               divObj.appendChild(bodyObj);
               document.body.appendChild(divObj);
-              // location.replace(homepage);
             } else {
               document.title = '跳转中...';
               location.replace(titleText);
