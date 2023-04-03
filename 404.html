@@ -34,8 +34,8 @@
       }
     </style>
     <script>
+      var PATH_SEGMENTS_TO_SKIP = 0;
 
-     
       function isUrl(url) {
         return /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,24}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+$/.test(
           url
@@ -43,15 +43,15 @@
       }
 
       function redirect() {
-        GITHUB_ISSUES_LINK = atob('aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy96dy05NS9zaG9ydHVybC1kYi9pc3N1ZXMv')
-        location= window.location;
-        homepage=
-        location.protocol +
-        '//' +
-        location.hostname +
-        (location.port ? ':' + location.port : '') +
-        '/' +
-        location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP];
+        var GITHUB_ISSUES_LINK = atob('aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy96dy05NS9zaG9ydHVybC1kYi9pc3N1ZXMv');
+        var location = window.location;
+        homepage =
+          location.protocol +
+          '//' +
+          location.hostname +
+          (location.port ? ':' + location.port : '') +
+          '/' +
+          location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP];
         var issueNumber = atob(location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP + 1]);
         var xhr = new XMLHttpRequest();
 
@@ -106,20 +106,23 @@
           }
         };
 
-        xhr.onerror = function () {
-        };
+        xhr.onerror = function () {};
         xhr.open('GET', GITHUB_ISSUES_LINK + issueNumber);
         xhr.send();
       }
-
-        var GITHUB_ISSUES_LINK ;
-        var PATH_SEGMENTS_TO_SKIP = 0;
-        var location, homepage ;
+      var homepage;
       try {
         redirect();
       } catch (e) {
         console.error(e);
-        location.replace(homepage);
+        window.location.replace(
+          location.protocol +
+            '//' +
+            location.hostname +
+            (location.port ? ':' + location.port : '') +
+            '/' +
+            location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP]
+        );
       }
     </script>
   </head>
