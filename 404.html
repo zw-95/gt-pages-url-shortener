@@ -2,126 +2,123 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="./assets/logo.png">
+    <link rel="icon" href="./assets/logo.png" />
     <title>短连接</title>
     <style>
       .box {
         background: #c0c0c02b;
         margin: 5% 5% 0 5%;
-        padding: 1rem!important;
-        margin-bottom: 3rem!important;
-        box-shadow: 0 1rem 3rem rgba(0,0,0,.175)!important;
-        border-radius: 1rem!important;
+        padding: 1rem !important;
+        margin-bottom: 3rem !important;
+        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+        border-radius: 1rem !important;
         backdrop-filter: blur(10px);
       }
-      .titleText {padding: 0% 2% 0% 2%;}
-      .bodyText {padding: 0% 2% 0% 2%; font-size: 20px;}
-      .timeText {padding: 0% 2% 0% 2%; font-size: 16px;color: rgb(69, 69, 69);}
+      .titleText {
+        padding: 0% 2% 0% 2%;
+      }
+      .bodyText {
+        padding: 0% 2% 0% 2%;
+        font-size: 20px;
+      }
+      .timeText {
+        padding: 0% 2% 0% 2%;
+        font-size: 16px;
+        color: rgb(69, 69, 69);
+      }
     </style>
     <style type="text/css">
-      body{
+      body {
         font-family: Consolas;
-        background-image: linear-gradient(90deg, #FFFFFF, #D8D8D8);
-        /* background: url("./assets/bg.png") no-repeat ;background-size: 100%; */
+        background-image: linear-gradient(90deg, #ffffff, #d8d8d8);
       }
-      </style>
+    </style>
     <script>
-      /**
-       * Configuration goes here
-       */
-      // Format: https://api.github.com/repos/{owner}/{repo}/issues/
-      var GITHUB_ISSUES_LINK =
-        "https://api.github.com/repos/zw-95/shorturl-db/issues/";
+      var GITHUB_ISSUES_LINK = atob('aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy96dy05NS9zaG9ydHVybC1kYi9pc3N1ZXMv');
       var PATH_SEGMENTS_TO_SKIP = 0;
-
-      /**
-       * DO NOT TOUCH ANYTHING BELOW THIS COMMENT UNLESS YOU KNOW WHAT YOU ARE DOING
-       */
+      var location = window.location;
+      var homepage =
+        location.protocol +
+        '//' +
+        location.hostname +
+        (location.port ? ':' + location.port : '') +
+        '/' +
+        location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP];
       function isUrl(url) {
-        // Regex from https://stackoverflow.com/a/3809435, with a modification to allow for TLDs of up to 24 characters
         return /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,24}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+$/.test(
           url
         );
       }
 
       function redirect() {
-        var location = window.location;
-        var issueNumber = atob(location.pathname.split("/")[
-          PATH_SEGMENTS_TO_SKIP + 1
-        ]);
-        var homepage =
-          location.protocol +
-          "//" +
-          location.hostname +
-          (location.port ? ":" + location.port : "") +
-          "/" +
-          location.pathname.split("/")[PATH_SEGMENTS_TO_SKIP];
-
+        var issueNumber = atob(location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP + 1]);
         var xhr = new XMLHttpRequest();
 
         xhr.onload = function () {
-          try {
-            if(xhr.status === 200){
-              var payload = JSON.parse(xhr.response);
-              var message = payload.message;
-              var titleText = payload.title;
-              var bodyText = payload.body;
-              var timeText = payload.updated_at;
+          if (xhr.status === 200) {
+            var payload = JSON.parse(xhr.response);
+            var message = payload.message;
+            var titleText = payload.title;
+            var bodyText = payload.body;
+            var timeText = payload.updated_at;
 
-              // Workaround IE 11 lack of support for new URL()
-              var url = document.createElement("a");
-              url.setAttribute("href", titleText);
+            var url = document.createElement('a');
+            url.setAttribute('href', titleText);
 
-              // Invalid URLs includes invalid issue numbers, issue titles that are not URLs, and recursive destination URLs
-              var isInvalidUrl =
-                message === "Not Found" ||
-                !titleText ||
-                !isUrl(titleText) ||
-                url.hostname === location.hostname;
+            var isInvalidUrl =
+              message === 'Not Found' || !titleText || !isUrl(titleText) || url.hostname === location.hostname;
 
-              if (isInvalidUrl) {
-                document.title = titleText;
-                let divObj = document.createElement('div');
-                divObj.className = 'box';
+            if (isInvalidUrl) {
+              document.title = titleText;
+              let divObj = document.createElement('div');
+              divObj.className = 'box';
 
-                let titleObj = document.createElement('h1');
-                titleObj.className = 'titleText';
-                titleObj.innerText = titleText;
+              let titleObj = document.createElement('h1');
+              titleObj.className = 'titleText';
+              titleObj.innerText = titleText;
 
-                let timeObj = document.createElement('p');
-                timeObj.className = 'timeText';
-                let textTime = new Date(timeText);
+              let timeObj = document.createElement('p');
+              timeObj.className = 'timeText';
+              let textTime = new Date(timeText);
 
-                timeObj.innerText = textTime.getFullYear() + '年' + (textTime.getMonth() + 1) + '月' + textTime.getDay() +'日 ' + textTime.toLocaleTimeString();
+              timeObj.innerText =
+                textTime.getFullYear() +
+                '年' +
+                (textTime.getMonth() + 1) +
+                '月' +
+                textTime.getDay() +
+                '日 ' +
+                textTime.toLocaleTimeString();
 
-                let bodyObj = document.createElement('p');
-                bodyObj.className = 'bodyText';
-                bodyObj.innerText = bodyText;
+              let bodyObj = document.createElement('p');
+              bodyObj.className = 'bodyText';
+              bodyObj.innerText = bodyText;
 
-                divObj.appendChild(titleObj);
-                divObj.appendChild(timeObj);
-                divObj.appendChild(bodyObj);
-                document.body.appendChild(divObj);
-              } else {
-                document.title = '跳转中...';
-                location.replace(titleText);
-              }
+              divObj.appendChild(titleObj);
+              divObj.appendChild(timeObj);
+              divObj.appendChild(bodyObj);
+              document.body.appendChild(divObj);
+            } else {
+              document.title = '跳转中...';
+              location.replace(titleText);
             }
-          } catch (e) {
-            location.replace(homepage);
-            console.error(e);
           }
         };
 
         xhr.onerror = function () {
-          location.replace(homepage);
         };
-        xhr.open("GET", GITHUB_ISSUES_LINK + issueNumber);
+        xhr.open('GET', GITHUB_ISSUES_LINK + issueNumber);
         xhr.send();
       }
 
-      redirect();
+      try {
+        redirect();
+      } catch (e) {
+        console.error(e);
+        location.replace(homepage);
+      }
     </script>
   </head>
+
   <body></body>
 </html>
