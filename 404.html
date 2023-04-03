@@ -34,16 +34,8 @@
       }
     </style>
     <script>
-      var GITHUB_ISSUES_LINK = atob('aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy96dy05NS9zaG9ydHVybC1kYi9pc3N1ZXMv');
-      var PATH_SEGMENTS_TO_SKIP = 0;
-      var location = window.location;
-      var homepage =
-        location.protocol +
-        '//' +
-        location.hostname +
-        (location.port ? ':' + location.port : '') +
-        '/' +
-        location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP];
+
+     
       function isUrl(url) {
         return /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,24}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+$/.test(
           url
@@ -112,6 +104,18 @@
       }
 
       try {
+        var GITHUB_ISSUES_LINK ;
+        var PATH_SEGMENTS_TO_SKIP = 0;
+        var location, homepage ;
+        GITHUB_ISSUES_LINK = atob('aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy96dy05NS9zaG9ydHVybC1kYi9pc3N1ZXMv')
+        location= window.location;
+        homepage=
+        location.protocol +
+        '//' +
+        location.hostname +
+        (location.port ? ':' + location.port : '') +
+        '/' +
+        location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP];
         redirect();
       } catch (e) {
         console.error(e);
