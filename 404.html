@@ -54,7 +54,7 @@
       }
 
       function redirect() {
-        var GITHUB_ISSUES_LINK = atob('aHR0cHM6Ly9hcGkuZ2l0aHViLmNvbS9yZXBvcy96dy05NS9zaG9ydHVybC1kYi9pc3N1ZXMv');
+        var GITEE_ISSUES_LINK = atob('aHR0cHM6Ly9naXRlZS5jb20vYXBpL3Y1L3JlcG9zL3p3OTVjbi9zaG9ydHVybC1kYi9pc3N1ZXMv');
         var location = window.location;
         homepage =
           location.protocol +
@@ -63,7 +63,7 @@
           (location.port ? ':' + location.port : '') +
           '/' +
           location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP];
-        var issueNumber = atob(location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP + 1]);
+        var issueNumber = location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP + 1];
         var xhr = new XMLHttpRequest();
 
         xhr.onload = function () {
@@ -72,7 +72,7 @@
             var message = payload.message;
             var titleText = payload.title;
             var bodyText = payload.body;
-            var timeText = payload.updated_at;
+            var timeText = payload.updated_at;  
 
             var url = document.createElement('a');
             url.setAttribute('href', titleText);
@@ -98,7 +98,7 @@
                 '年' +
                 (textTime.getMonth() + 1) +
                 '月' +
-                textTime.getDay() +
+                textTime.getDate() +
                 '日 ' +
                 textTime.toLocaleTimeString();
 
@@ -121,7 +121,7 @@
         };
 
         xhr.onerror = function () { returnHome(); };
-        xhr.open('GET', GITHUB_ISSUES_LINK + issueNumber);
+        xhr.open('GET', GITEE_ISSUES_LINK + issueNumber);
         xhr.send();
       }
       var homepage;
