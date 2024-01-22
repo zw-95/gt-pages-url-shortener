@@ -78,25 +78,34 @@
       }
       function copyText() {
         const textToCopy = document.querySelector(".bodyText");
-        
+        const copyBtn = document.querySelector(".copy-button");
+        copyBtn.color = rgba(5,150,105,1);
+        copyBtn.innerText = '复制成功';
+        copyBtn.style.fontWeight = 'bold';
+
+
         // 创建一个新的textarea元素，并将要复制的文字设置为其value
         const textarea = document.createElement("textarea");
         textarea.value = textToCopy.innerText;
-        
+
         // textarea添加到文档中
         document.body.appendChild(textarea);
-        
+
         // 选中textarea中的文字
         textarea.select();
-        
+
         // 复制选中文字到剪贴板
         document.execCommand("copy");
-        
+
         // 移除textarea
         document.body.removeChild(textarea);
-        
+
         // 在控制台输出复制成功的消息
         console.log("已复制剪贴板：", textarea.value);
+        setTimeout(()=>{
+          copyBtn.innerText = '复制全文';
+          copyBtn.style.fontWeight = 'normal';
+        },1000);
       }
       function redirect() {
         var GITEE_ISSUES_LINK = atob('aHR0cHM6Ly9naXRlZS5jb20vYXBpL3Y1L3JlcG9zL3p3OTVjbi9zaG9ydHVybC1kYi9pc3N1ZXMv');
