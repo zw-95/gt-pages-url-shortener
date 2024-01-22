@@ -26,6 +26,30 @@
         font-size: 16px;
         color: rgb(69, 69, 69);
       }
+      .copy-button {
+        float: inline-end;
+        background: transparent !important;
+        color: rgb(69, 69, 69);
+        padding: 5px 5px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 12px;
+        box-shadow: none;
+        transition: box-shadow 0.5s ease;
+      }
+      .copy-button:hover {
+        float: inline-end;
+        background: transparent !important;
+        color: rgba(5,150,105,1);
+        padding: 5px 5px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        font-size: 12px;
+        box-shadow: none;
+        transition: box-shadow 0.5s ease;
+      }
     </style>
     <style type="text/css">
       body {
@@ -37,7 +61,7 @@
       var PATH_SEGMENTS_TO_SKIP = 0;
 
       function isUrl(url) {
-        return /^[a-zA-z]+:\/\/[^\s]*$/.test(
+        return /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,24}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)+$/.test(
           url
         );
       }
@@ -53,6 +77,29 @@
         );
       }
 
+      function copyText() {
+          const textToCopy = document.querySelector(".bodyText");
+          
+          // 创建一个新的textarea元素，并将要复制的文字设置为其value
+          const textarea = document.createElement("textarea");
+          textarea.value = textToCopy.innerText;
+          
+          // textarea添加到文档中
+          document.body.appendChild(textarea);
+          
+          // 选中textarea中的文字
+          textarea.select();
+          
+          // 复制选中文字到剪贴板
+          document.execCommand("copy");
+          
+          // 移除textarea
+          document.body.removeChild(textarea);
+          
+          // 在控制台输出复制成功的消息
+          console.log("已复制剪贴板：", textarea.value);
+        }
+
       function redirect() {
         var GITEE_ISSUES_LINK = atob('aHR0cHM6Ly9naXRlZS5jb20vYXBpL3Y1L3JlcG9zL3p3OTVjbi9zaG9ydHVybC1kYi9pc3N1ZXMv');
         var location = window.location;
@@ -62,8 +109,8 @@
           location.hostname +
           (location.port ? ':' + location.port : '') +
           '/' +
-          location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP];
-        var issueNumber = location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP + 1];
+          location.pathname。split('/')[PATH_SEGMENTS_TO_SKIP];
+        var issueNumber = atob(location.pathname。split('/')[PATH_SEGMENTS_TO_SKIP + 1]);
         var xhr = new XMLHttpRequest();
 
         xhr.onload = function () {
@@ -72,7 +119,7 @@
             var message = payload.message;
             var titleText = payload.title;
             var bodyText = payload.body;
-            var timeText = payload.updated_at;  
+            var timeText = payload.updated_at;
 
             var url = document.createElement('a');
             url.setAttribute('href', titleText);
@@ -89,6 +136,11 @@
               titleObj.className = 'titleText';
               titleObj.innerText = titleText;
 
+              let copyBtnObj = document.createElement('button');
+              copyBtnObj.className = 'copy-button';
+              copyBtnObj.innerText = '复制正文';
+              copyBtnObj.addEventListener('click', copyText);
+              
               let timeObj = document.createElement('p');
               timeObj.className = 'timeText';
               let textTime = new Date(timeText);
@@ -98,7 +150,7 @@
                 '年' +
                 (textTime.getMonth() + 1) +
                 '月' +
-                textTime.getDate() +
+                textTime.getDay() +
                 '日 ' +
                 textTime.toLocaleTimeString();
 
@@ -108,8 +160,9 @@
 
               divObj.appendChild(titleObj);
               divObj.appendChild(timeObj);
+              divObj.appendChild(copyBtnObj);
               divObj.appendChild(bodyObj);
-              document.body.appendChild(divObj);
+              document.body。appendChild(divObj);
             } else {
               document.title = '跳转中...';
               location.replace(titleText);
@@ -121,7 +174,7 @@
         };
 
         xhr.onerror = function () { returnHome(); };
-        xhr.open('GET', GITEE_ISSUES_LINK + issueNumber);
+        xhr.打开('GET', GITEE_ISSUES_LINK + issueNumber);
         xhr.send();
       }
       var homepage;
