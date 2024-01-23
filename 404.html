@@ -6,13 +6,27 @@
     <title>短连接</title>
     <style>
       .box {
-        background: #c0c0c02b;
-        margin: 5% 5% 0 5%;
-        padding: 1rem !important;
-        margin-bottom: 3rem !important;
-        box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
-        border-radius: 1rem !important;
-        backdrop-filter: blur(10px);
+        --dark-grey: #353535;
+        --middle-grey: #767676;
+        --lightest-grey: linear-gradient(#fafafa,#ebebeb);
+        --shadow: 0 5px 15px 0 #00000026;
+        --shadow-active: 0 5px 5px 0 #00000026;
+        --border-radius-main: 10px;
+        --border-radius-icon: 50px;
+        position: relative;
+        display: flex;
+        text-align: center;
+        flex-direction: column;
+        align-items: center;
+        cursor: default;
+        color: var(--dark-grey);
+        opacity: .9;
+        font-weight: 600;
+        background: var(--lightest-grey);
+        max-width: max-content;
+        border-radius: var(--border-radius-main);
+        box-shadow: var(--shadow);
+        transition: .2s ease all;
       }
       .titleText {
         padding: 0% 2% 0% 2%;
@@ -28,27 +42,26 @@
       }
       .copy-button {
         float: inline-end;
-        background: transparent !important;
-        color: rgb(69, 69, 69);
-        padding: 5px 5px;
+        padding: 2px 10px;
+        border: 0;
         border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        font-size: 12px;
-        box-shadow: none;
-        transition: box-shadow 0.5s ease;
+        background-color: #a5dc86;
+        color: #ffffff;
+        font-weight: normal;
+        transition: all 0.5s;
+        -webkit-transition: all 0.5s;
       }
       .copy-button:hover {
-        float: inline-end;
-        background: transparent !important;
-        color: rgba(5,150,105,1);
-        padding: 5px 5px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        font-size: 12px;
+        background-color: #a5dc86;
+        box-shadow: 0 0 20px #a5dc8686;
+        transform: scale(1.1);
+      }
+      .copy-button:active {
+        background-color: #8bb971;
+        transition: all 0.25s;
+        -webkit-transition: all 0.25s;
         box-shadow: none;
-        transition: box-shadow 0.5s ease;
+        transform: scale(0.98);
       }
     </style>
     <style type="text/css">
@@ -78,11 +91,10 @@
       }
       function copyText() {
         const textToCopy = document.querySelector(".bodyText");
-        const copyBtn = document.querySelector(".copy-button");
-        copyBtn.color = 'rgba(5,150,105,1)';
+        // const copyBtn = document.querySelector(".copy-button");
+        // copyBtn.color = 'rgba(5,150,105,1)';
         copyBtn.innerText = '复制成功';
-        copyBtn.style.fontWeight = 'bold';
-
+        // copyBtn.style.fontWeight = 'bold';
 
         // 创建一个新的textarea元素，并将要复制的文字设置为其value
         const textarea = document.createElement("textarea");
@@ -104,8 +116,8 @@
         console.log("已复制剪贴板：", textarea.value);
         setTimeout(()=>{
           copyBtn.innerText = '复制全文';
-          copyBtn.style.fontWeight = 'normal';
-        },1000);
+          // copyBtn.style.fontWeight = 'normal';
+        },500);
       }
       function redirect() {
         var GITEE_ISSUES_LINK = atob('aHR0cHM6Ly9naXRlZS5jb20vYXBpL3Y1L3JlcG9zL3p3OTVjbi9zaG9ydHVybC1kYi9pc3N1ZXMv');
@@ -145,7 +157,8 @@
 
               let copyBtnObj = document.createElement('button');
               copyBtnObj.className = 'copy-button';
-              copyBtnObj.innerText = '复制正文';
+              // copyBtnObj.innerText = '复制正文';
+              copyBtnObj.innerHtml = '复制正文';
               copyBtnObj.addEventListener('click', copyText);
 
               let timeObj = document.createElement('p');
