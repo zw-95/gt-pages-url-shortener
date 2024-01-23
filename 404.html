@@ -88,10 +88,8 @@
       }
       function copyText() {
         const textToCopy = document.querySelector(".bodyText");
-        // const copyBtn = document.querySelector(".copy-button");
-        // copyBtn.color = 'rgba(5,150,105,1)';
+        const copyBtn = document.querySelector(".copy-button");
         copyBtn.innerText = '成功';
-        // copyBtn.style.fontWeight = 'bold';
 
         // 创建一个新的textarea元素，并将要复制的文字设置为其value
         const textarea = document.createElement("textarea");
@@ -113,7 +111,6 @@
         console.log("已复制剪贴板：", textarea.value);
         setTimeout(()=>{
           copyBtn.innerText = '复制';
-          // copyBtn.style.fontWeight = 'normal';
         },500);
       }
       function redirect() {
