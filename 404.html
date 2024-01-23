@@ -19,18 +19,20 @@
         cursor: default;
         color: var(--dark-grey);
         opacity: .9;
-        font-weight: 600;
         background: var(--lightest-grey);
         border-radius: var(--border-radius-main);
         box-shadow: var(--shadow);
         transition: .2s ease all;
+      }
+      .box:hover{
+        box-shadow: var(--shadow-active);
       }
       .titleText {
         padding: 0% 2% 0% 2%;
       }
       .bodyText {
         padding: 0% 2% 0% 2%;
-        font-size: 20px;
+        font-size: 18px;
       }
       .timeText {
         padding: 0% 2% 0% 2%;
@@ -42,14 +44,15 @@
         padding: 2px 10px;
         border: 0;
         border-radius: 5px;
-        background-color: #a5dc86;
-        color: #ffffff;
+        background-color: transparent;
+        color: #a5dc86;
         font-weight: normal;
         transition: all 0.5s;
         -webkit-transition: all 0.5s;
       }
       .copy-button:hover {
         background-color: #a5dc86;
+        color: white;
         box-shadow: 0 0 20px #a5dc8686;
         transform: scale(1.1);
       }
