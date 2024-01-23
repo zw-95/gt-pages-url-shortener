@@ -6,6 +6,8 @@
     <title>短连接</title>
     <style>
       .box {
+        margin: 5% 5% 0 5%;
+        padding: 1rem !important;
         --dark-grey: #353535;
         --middle-grey: #767676;
         --lightest-grey: linear-gradient(#fafafa,#ebebeb);
@@ -14,16 +16,11 @@
         --border-radius-main: 10px;
         --border-radius-icon: 50px;
         position: relative;
-        display: flex;
-        text-align: center;
-        flex-direction: column;
-        align-items: center;
         cursor: default;
         color: var(--dark-grey);
         opacity: .9;
         font-weight: 600;
         background: var(--lightest-grey);
-        max-width: max-content;
         border-radius: var(--border-radius-main);
         box-shadow: var(--shadow);
         transition: .2s ease all;
@@ -93,7 +90,7 @@
         const textToCopy = document.querySelector(".bodyText");
         // const copyBtn = document.querySelector(".copy-button");
         // copyBtn.color = 'rgba(5,150,105,1)';
-        copyBtn.innerText = '复制成功';
+        copyBtn.innerText = '成功';
         // copyBtn.style.fontWeight = 'bold';
 
         // 创建一个新的textarea元素，并将要复制的文字设置为其value
@@ -115,7 +112,7 @@
         // 在控制台输出复制成功的消息
         console.log("已复制剪贴板：", textarea.value);
         setTimeout(()=>{
-          copyBtn.innerText = '复制全文';
+          copyBtn.innerText = '复制';
           // copyBtn.style.fontWeight = 'normal';
         },500);
       }
@@ -157,8 +154,7 @@
 
               let copyBtnObj = document.createElement('button');
               copyBtnObj.className = 'copy-button';
-              // copyBtnObj.innerText = '复制正文';
-              copyBtnObj.innerHtml = '复制正文';
+              copyBtnObj.innerText = '复制';
               copyBtnObj.addEventListener('click', copyText);
 
               let timeObj = document.createElement('p');
