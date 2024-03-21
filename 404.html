@@ -141,7 +141,7 @@
             url.setAttribute('href', titleText);
 
             var isInvalidUrl =
-              message === 'Not Found' || message === 'This issue was deleted' || !titleText || !isUrl(titleText)|| !isUrl(bodyText) || url.hostname === location.hostname;
+              message === 'Not Found' || message === 'This issue was deleted' || !titleText || (!isUrl(titleText) && !isUrl(bodyText)) || url.hostname === location.hostname;
 
             if (isInvalidUrl) {
               document.title = titleText;
