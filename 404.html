@@ -181,7 +181,11 @@
               document.body.appendChild(divObj);
             } else {
               document.title = '跳转中...';
-              location.replace(titleText);
+              if(isUrl(titleText)){
+                location.replace(titleText);
+              } else {
+                location.replace(bodyText);
+              }
             }
           } else {
             console.error(xhr.status+' '+xhr.response);
