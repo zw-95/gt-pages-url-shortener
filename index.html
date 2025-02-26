@@ -5,7 +5,82 @@
   <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
   <link rel="icon" href="./assets/favicon.ico" />
   <title>链接错误！</title>
-  <link rel="stylesheet" href="./assets/css/404.css" />
+
+  <style>
+    :root {
+      /* 浅色模式默认值 */
+      --bg-gradient-start: #FFF;
+      --bg-gradient-end: #D7D7D7;
+      --text-primary: #888;
+      --border-color: #DEDEDE;
+      --link-color: #1677ff;
+    }
+
+    /* 深色模式适配 */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-gradient-start: #1a1a1a;
+        --bg-gradient-end: #2d2d2d;
+        --text-primary: #aaa;
+        --border-color: #444;
+        --link-color: #4dabff;
+      }
+    }
+
+    body {
+      font-family: system-ui, 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(var(--bg-gradient-start), var(--bg-gradient-end));
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      margin: 0;
+      position: relative;
+      transition: background 0.3s ease;
+    }
+
+    .not-found {
+      color: var(--text-primary);
+      font-size: clamp(30px, 4vw + 0.5rem, 15vh);
+      transform: translateY(-30%);
+      padding-right: 2%;
+      padding-left: 5%;
+      transition: color 0.3s ease;
+      user-select: none; /* 标准语法 */
+      -webkit-user-select: none; /* Chrome/Safari */
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* IE/Edge */
+    }
+
+    .not-found::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: -0.5em;
+      bottom: -0.5em;
+      width: 100%;
+      border: 10px solid var(--border-color);
+      border-right: none;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+
+    .bootstrapText {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      font-size: 12px;
+      color: var(--link-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .bootstrapText:hover {
+      text-decoration: underline;
+      opacity: 0.9;
+    }
+
+  </style>
 
 </head>
 <body>

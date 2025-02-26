@@ -4,20 +4,147 @@
     <meta charset="utf-8" />
     <link rel="icon" href="./assets/favicon.ico" />
     <title>短连接</title>
-    <link rel="stylesheet" href="./assets/css/404.css" />
 
     <!-- 添加依赖库 -->
-    <script src="./libs/marked/marked.min.js"></script>
-    <link rel="stylesheet" href="./libs/github-markdown-css/github-markdown.min.css">
-    <script src="./libs/highlight.js/highlight.min.js"></script>
+    <script src="../libs/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="../libs/github-markdown-css/github-markdown.min.css">
+    <script src="../libs/highlight.js/highlight.min.js"></script>
     <!-- 浅色模式默认主题 -->
     <link rel="stylesheet" 
-    href="./libs/highlight.js/styles/github.min.css">
+    href="../libs/highlight.js/styles/github.min.css">
     <!-- 深色模式覆盖主题 -->
     <link rel="stylesheet" 
-    href="./libs/highlight.js/styles/github-dark.min.css"
+    href="../libs/highlight.js/styles/github-dark.min.css"
     media="(prefers-color-scheme: dark)">
-    
+    <style>
+      :root {
+        /* 浅色模式默认值 */
+        --page-bg: #ffffff;
+        --card-bg-start: #fafafa;
+        --card-bg-end: #ebebeb;
+        --title-color: #353535;
+        --text-color: #353535;
+        --secondary-text: #767676;
+        --code-bg: #f6f8fa;
+        --border-color: #eaecef;
+        --shadow-main: 0 5px 15px 0 rgba(0,0,0,0.15);
+        --shadow-hover: 0 5px 5px 0 rgba(0,0,0,0.15);
+        --button-border: #a5dc86;
+        --button-text: #a5dc86;
+        --button-hover-bg: #a5dc86;
+        --font-family: system-ui, 'Microsoft YaHei', sans-serif;
+      }
+
+      /* 深色模式覆盖 */
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --page-bg: #1a1a1a;
+          --card-bg-start: #2d2d2d;
+          --card-bg-end: #1a1a1a;
+          --title-color: #e0e0e0;
+          --text-color: #cccccc;
+          --secondary-text: #909090;
+          --code-bg: #2d2d2d;
+          --border-color: #404040;
+          --shadow-main: 0 5px 15px 0 rgba(0,0,0,0.4);
+          --shadow-hover: 0 5px 5px 0 rgba(0,0,0,0.4);
+          --button-border: #6a9955;
+          --button-text: #6a9955;
+          --button-hover-bg: #6a9955;
+        }
+      }
+
+      body {
+        font-family: var(--font-family);
+        background: var(--page-bg);
+        color: var(--text-color);
+        line-height: 1.5;
+        margin: 0;
+        padding: 20px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      button{
+        font-family: var(--font-family);
+      }
+
+      .container {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+
+      .box {
+        margin: 2rem 0;
+        padding: 1rem !important;
+        background: linear-gradient(135deg, var(--card-bg-start), var(--card-bg-end));
+        border-radius: 10px;
+        box-shadow: var(--shadow-main);
+        transition: all 0.3s ease;
+      }
+
+      .box:hover {
+        box-shadow: var(--shadow-hover);
+      }
+
+      .titleText {
+        font-size: 2em !important;
+        border-bottom: 1px solid var(--border-color);
+        padding: 0 2% 0.3em !important;
+        margin: 0 0 1em;
+        color: var(--title-color);
+      }
+
+      .timeText {
+        font-size: 14px;
+        color: var(--secondary-text);
+        padding: 0 2%;
+        margin: 0 0 1em;
+      }
+
+      .copy-button {
+        float: right;
+        padding: 3px 4px;
+        border: 1px solid var(--button-border);
+        border-radius: 6px;
+        background-color: transparent;
+        color: var(--button-text);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .copy-button:hover {
+        background-color: var(--button-hover-bg);
+        color: var(--page-bg);
+      }
+
+      .markdown-body {
+        font-family: var(--font-family);
+        padding: 0 2% !important;
+        background: transparent !important;
+        color: var(--text-color);
+      }
+
+      .markdown-body pre {
+        background-color: var(--code-bg);
+        padding: 16px;
+        border-radius: 6px;
+        overflow-x: auto;
+        transition: background-color 0.3s ease;
+      }
+
+      @media (max-width: 767px) {
+        body {
+          padding: 10px;
+        }
+        .container {
+          padding: 0 10px;
+        }
+        .markdown-body {
+          font-size: 14px;
+        }
+      }
+    </style>
+
     <script>
       // Markdown 配置
       marked.setOptions({
