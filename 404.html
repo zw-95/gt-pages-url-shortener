@@ -100,7 +100,21 @@
         padding: 0 2%;
         margin: 0 0 1em;
       }
+      /* 新增作者样式 */
+      .meta-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2%;
+        margin: 0 0 1em;
+      }
 
+      .authorText {
+        font-size: 14px;
+        color: var(--secondary-text);
+        font-style: italic;
+      }
+      
       .copy-button {
         float: right;
         padding: 3px 4px;
@@ -203,6 +217,7 @@
             var titleText = payload.title;
             var bodyText = payload.body;
             var timeText = payload.updated_at;  
+            var userName = payload.user?.name || '';
 
             var isInvalidUrl = message === 'Not Found' || 
                              message === 'This issue was deleted' || 
@@ -221,10 +236,24 @@
               titleObj.className = 'titleText';
               titleObj.textContent = titleText;
 
+              // 创建元信息容器
+              let metaContainer = document.createElement('div');
+              metaContainer.className = 'meta-info';
+
+              // 时间元素
               let timeObj = document.createElement('p');
               timeObj.className = 'timeText';
               let textTime = new Date(timeText);
               timeObj.textContent = textTime.toLocaleString();
+
+              // 作者元素
+              let authorObj = document.createElement('span');
+              authorObj.className = 'authorText';
+              authorObj.textContent = `作者：${userName}`;
+
+              // 组装元素
+              metaContainer.appendChild(timeObj);
+              metaContainer.appendChild(authorObj);
 
               let copyBtnObj = document.createElement('button');
               copyBtnObj.className = 'copy-button';
@@ -237,9 +266,10 @@
               bodyObj.dataset.raw = bodyText; // 保存原始文本
 
               divObj.appendChild(titleObj);
-              divObj.appendChild(timeObj);
+              divObj.appendChild(metaContainer);
               divObj.appendChild(copyBtnObj);
               divObj.appendChild(bodyObj);
+
               container.appendChild(divObj);
               document.body.appendChild(container);
 
