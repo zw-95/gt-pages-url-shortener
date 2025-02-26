@@ -114,7 +114,7 @@
         color: var(--secondary-text);
         font-style: italic;
       }
-      
+
       .copy-button {
         float: right;
         padding: 3px 4px;
@@ -249,7 +249,7 @@
               // 作者元素
               let authorObj = document.createElement('span');
               authorObj.className = 'authorText';
-              authorObj.textContent = `作者：${userName}`;
+              authorObj.textContent = userName ? `作者：${userName}` :'';
 
               // 组装元素
               metaContainer.appendChild(timeObj);
