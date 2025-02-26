@@ -4,10 +4,14 @@
     <meta charset="utf-8" />
     <link rel="icon" href="./assets/favicon.ico" />
     <title>短连接</title>
+    <!-- 添加依赖库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+    
     <style>
-      .box {
-        margin: 5% 5% 0 5%;
-        padding: 1rem !important;
+      :root {
         --dark-grey: #353535;
         --middle-grey: #767676;
         --lightest-grey: linear-gradient(#fafafa,#ebebeb);
@@ -15,68 +19,104 @@
         --shadow-active: 0 5px 5px 0 #00000026;
         --border-radius-main: 10px;
         --border-radius-icon: 50px;
-        position: relative;
-        cursor: default;
-        color: var(--dark-grey);
-        opacity: .9;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background: #fff;
+        line-height: 1.5;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+
+      .box {
+        margin: 2rem 0;
+        padding: 1rem !important;
         background: var(--lightest-grey);
         border-radius: var(--border-radius-main);
         box-shadow: var(--shadow);
         transition: .2s ease all;
       }
-      .box:hover{
+
+      .box:hover {
         box-shadow: var(--shadow-active);
       }
+
       .titleText {
-        padding: 0% 2% 0% 2%;
+        font-size: 2em !important;
+        border-bottom: 1px solid #eaecef;
+        padding: 0 2% 0.3em !important;
+        margin: 0 0 1em;
+        color: var(--dark-grey);
       }
-      .bodyText {
-        padding: 0% 2% 0% 2%;
-        font-size: 18px;
-      }
+
       .timeText {
-        padding: 0% 2% 0% 2%;
-        font-size: 16px;
-        color: rgb(69, 69, 69);
+        font-size: 14px;
+        color: var(--middle-grey);
+        padding: 0 2%;
+        margin: 0 0 1em;
       }
+
       .copy-button {
-        float: inline-end;
-        padding: 2px 10px;
-        border: 0;
-        border-radius: 5px;
+        float: right;
+        padding: 6px 12px;
+        border: 1px solid #a5dc86;
+        border-radius: 6px;
         background-color: transparent;
         color: #a5dc86;
-        font-weight: normal;
-        transition: all 0.5s;
-        -webkit-transition: all 0.5s;
+        cursor: pointer;
+        transition: all 0.3s;
       }
+
       .copy-button:hover {
         background-color: #a5dc86;
         color: white;
-        box-shadow: 0 0 20px #a5dc8686;
-        transform: scale(1.1);
       }
-      .copy-button:active {
-        background-color: #8bb971;
-        transition: all 0.25s;
-        -webkit-transition: all 0.25s;
-        box-shadow: none;
-        transform: scale(0.98);
+
+      .markdown-body {
+        padding: 0 2% !important;
+        background: transparent !important;
       }
-    </style>
-    <style type="text/css">
-      body {
-        font-family: Consolas;
-        background-image: linear-gradient(90deg, #ffffff, #d8d8d8);
+
+      .markdown-body pre {
+        background-color: #f6f8fa;
+        padding: 16px;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
+
+      @media (max-width: 767px) {
+        body {
+          padding: 10px;
+        }
+        .container {
+          padding: 0 10px;
+        }
+        .markdown-body {
+          font-size: 14px;
+        }
       }
     </style>
     <script>
+      // Markdown 配置
+      marked.setOptions({
+        breaks: true,
+        gfm: true,
+        sanitize: true,
+        highlight: function(code, lang) {
+          return hljs.highlightAuto(code).value;
+        }
+      });
+
       var PATH_SEGMENTS_TO_SKIP = 0;
 
       function isUrl(url) {
-        return /^[a-zA-z]+:\/\/[^\s]*$/.test(
-          url
-        );
+        return /^[a-zA-z]+:\/\/[^\s]*$/.test(url);
       }
 
       function returnHome() {
@@ -89,43 +129,27 @@
             location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP]
         );
       }
+
       function copyText() {
-        const textToCopy = document.querySelector(".bodyText");
+        const rawText = document.querySelector(".markdown-body").dataset.raw;
         const copyBtn = document.querySelector(".copy-button");
-        copyBtn.innerText = '成功';
-
-        // 创建一个新的textarea元素，并将要复制的文字设置为其value
+        
         const textarea = document.createElement("textarea");
-        textarea.value = textToCopy.innerText;
-
-        // textarea添加到文档中
+        textarea.value = rawText;
         document.body.appendChild(textarea);
-
-        // 选中textarea中的文字
         textarea.select();
-
-        // 复制选中文字到剪贴板
         document.execCommand("copy");
-
-        // 移除textarea
         document.body.removeChild(textarea);
 
-        // 在控制台输出复制成功的消息
-        console.log("已复制剪贴板：", textarea.value);
-        setTimeout(()=>{
+        copyBtn.innerText = '已复制';
+        setTimeout(() => {
           copyBtn.innerText = '复制';
-        },500);
+        }, 1000);
       }
+
       function redirect() {
         var GITEE_ISSUES_LINK = atob('aHR0cHM6Ly9naXRlZS5jb20vYXBpL3Y1L3JlcG9zL3p3OTVjbi9zaG9ydHVybC1kYi9pc3N1ZXMv');
         var location = window.location;
-        homepage =
-          location.protocol +
-          '//' +
-          location.hostname +
-          (location.port ? ':' + location.port : '') +
-          '/' +
-          location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP];
         var issueNumber = location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP + 1];
         var xhr = new XMLHttpRequest();
 
@@ -137,55 +161,50 @@
             var bodyText = payload.body;
             var timeText = payload.updated_at;  
 
-            var url = document.createElement('a');
-            url.setAttribute('href', titleText);
-
-            var isInvalidUrl =
-              message === 'Not Found' || message === 'This issue was deleted' || !titleText || (!isUrl(titleText) && !isUrl(bodyText)) ;
+            var isInvalidUrl = message === 'Not Found' || 
+                             message === 'This issue was deleted' || 
+                             !titleText || 
+                             (!isUrl(titleText) && !isUrl(bodyText));
 
             if (isInvalidUrl) {
               document.title = titleText;
+              let container = document.createElement('div');
+              container.className = 'container';
+
               let divObj = document.createElement('div');
               divObj.className = 'box';
 
               let titleObj = document.createElement('h1');
               titleObj.className = 'titleText';
-              titleObj.innerText = titleText;
-
-              let copyBtnObj = document.createElement('button');
-              copyBtnObj.className = 'copy-button';
-              copyBtnObj.innerText = '复制';
-              copyBtnObj.addEventListener('click', copyText);
+              titleObj.textContent = titleText;
 
               let timeObj = document.createElement('p');
               timeObj.className = 'timeText';
               let textTime = new Date(timeText);
+              timeObj.textContent = textTime.toLocaleString();
 
-              timeObj.innerText =
-                textTime.getFullYear() +
-                '年' +
-                (textTime.getMonth() + 1) +
-                '月' +
-                textTime.getDate() +
-                '日 ' +
-                textTime.toLocaleTimeString();
+              let copyBtnObj = document.createElement('button');
+              copyBtnObj.className = 'copy-button';
+              copyBtnObj.textContent = '复制';
+              copyBtnObj.addEventListener('click', copyText);
 
-              let bodyObj = document.createElement('p');
-              bodyObj.className = 'bodyText';
-              bodyObj.innerText = bodyText;
+              let bodyObj = document.createElement('div');
+              bodyObj.className = 'markdown-body';
+              bodyObj.innerHTML = marked.parse(bodyText);
+              bodyObj.dataset.raw = bodyText; // 保存原始文本
 
               divObj.appendChild(titleObj);
               divObj.appendChild(timeObj);
               divObj.appendChild(copyBtnObj);
               divObj.appendChild(bodyObj);
-              document.body.appendChild(divObj);
+              container.appendChild(divObj);
+              document.body.appendChild(container);
+
+              // 代码高亮
+              hljs.highlightAll();
             } else {
               document.title = '跳转中...';
-              if(isUrl(titleText)){
-                location.replace(titleText);
-              } else {
-                location.replace(bodyText);
-              }
+              isUrl(titleText) ? location.replace(titleText) : location.replace(bodyText);
             }
           } else {
             console.error(xhr.status+' '+xhr.response);
@@ -193,11 +212,11 @@
           }
         };
 
-        xhr.onerror = function () { returnHome(); };
+        xhr.onerror = returnHome;
         xhr.open('GET', GITEE_ISSUES_LINK + issueNumber);
         xhr.send();
       }
-      var homepage;
+
       try {
         redirect();
       } catch (e) {
@@ -206,6 +225,5 @@
       }
     </script>
   </head>
-
   <body></body>
 </html>
