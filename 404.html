@@ -169,6 +169,36 @@
         transition: background-color 0.3s ease;
       }
 
+      .markdown-body code {
+        margin: 0rem 0.2rem 0rem 0.2rem;
+        padding: 2px 5px;
+        display: inline-flex;
+        line-height: inherit;
+      }
+
+      .markdown-body kbd {
+        font-size: 12px;
+        margin: 0.2rem 0.2rem 0.3rem 0.2rem;
+        padding: 0.2rem 0.3rem 0.4rem 0.3rem;
+      }
+
+      .markdown-body blockquote {
+        padding: 1rem 1em;
+        color: var(--color-accent-fg);
+        border-left: .25em solid var(--color-accent-emphasis);
+        background-color: var(--info-bg);
+      }
+
+      .markdown-body mark {
+        background-color: var(--warn-text);
+        color: var(--title-color);
+      }
+
+      .markdown-body del {
+        font-style: italic;
+        color: var(--secondary-text);
+      }
+
       @media (max-width: 767px) {
         body {
           padding: 10px;
@@ -234,11 +264,13 @@
         var originHTML = copyBtn.innerHTML;
         var originBackgroundColor = copyBtn.innerHTML;
 
+        copyBtn.style.color = 'var(--success-text)';
         copyBtn.style.backgroundColor = 'var(--success-bg)';
         copyBtn.innerHTML = '<svg width="1.2rem" class="icon-success" height="1.2rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.338 21.575a1.058 1.058 0 0 1-.53-.363L2.275 13.17a1.063 1.063 0 0 1 1.65-1.341l5.63 6.928L19.33 3.86a1.064 1.064 0 0 1 1.778 1.167L10.551 21.115a1.065 1.065 0 0 1-1.213.46z" fill="currentColor"></path></svg>已复制';
         setTimeout(() => {
           copyBtn.innerHTML = originHTML;
-          copyBtn.style.backgroundColor = "";
+          copyBtn.style.backgroundColor = '';
+          copyBtn.style.color = '';
         }, 1000);
       }
 
