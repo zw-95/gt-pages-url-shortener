@@ -347,7 +347,20 @@
           return 'system'; // 默认
         }
 
+        // 获取 highlight-dark.min.css 的 <link> 标签
+        function getHighlightDarkLink() {
+          const links = document.querySelectorAll('link[href*="github-dark.min.css"]');
+          for (let link of links) {
+            if (link.href.includes('github-dark.min.css')) {
+              return link;
+            }
+          }
+          return null;
+        }
+
+        // 应用主题（包含页面主题 + highlight.js 主题）
         function applyTheme(mode) {
+          // 1. 处理页面主题：控制 body class
           document.body.classList.remove('light-theme', 'dark-theme');
 
           if (mode === 'light') {
@@ -356,13 +369,28 @@
             document.body.classList.add('dark-theme');
           }
 
-          // 更新图标
+          // 2. 处理 highlight.js 主题：动态修改 media 属性
+          const link = getHighlightDarkLink();
+          if (link) {
+            const modeData = MODES[mode];
+            if (modeData) {
+              // 根据模式设置 media 属性
+              if (mode === 'system') {
+                link.media = '(prefers-color-scheme: dark)'; // 跟随系统
+              } else if (mode === 'light') {
+                link.media = 'not all'; // 禁用深色高亮
+              } else if (mode === 'dark') {
+                link.media = 'all'; // 强制启用深色高亮
+              }
+            }
+          }
+
+          // 3. 更新图标显示
           const modeData = MODES[mode];
           if (modeData && modeData.icon) {
             themeToggle.innerHTML = modeData.icon;
           }
         }
-
         function initTheme() {
           const savedMode = getCurrentMode();
           applyTheme(savedMode);
