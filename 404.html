@@ -415,13 +415,8 @@
 
     try {
       redirect();
-    } catch (e) {
-      console.error(e);
-      returnHome();
-    }
-  </script>
-  <script>
-    let themeToggle = document.getElementById('theme-toggle');
+
+      let themeToggle = document.getElementById('theme-toggle');
     if (!themeToggle) {
       themeToggle = document.createElement('button');
       themeToggle.id = 'theme-toggle';
@@ -489,6 +484,11 @@
 
     themeToggle.addEventListener('click', cycleTheme);
     initTheme();
+
+    } catch (e) {
+      console.error(e);
+      returnHome();
+    }
   </script>
 </head>
 
