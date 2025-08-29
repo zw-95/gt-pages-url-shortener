@@ -107,7 +107,7 @@ body.light-theme {
 }
 
 body {
-  --font-family: cursive, system-ui, 'Microsoft YaHei', sans-serif;
+  --font-family: system-ui, 'Microsoft YaHei', sans-serif;
   font-family: var(--font-family);
   background: var(--page-bg);
   color: var(--text-color);
@@ -188,7 +188,7 @@ button:hover {
   height: 24px;
   line-height: 25px;
   display: flex;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .markdown-body {
