@@ -421,7 +421,12 @@
     }
   </script>
   <script>
-    const themeToggle = document.getElementById('theme-toggle');
+    let themeToggle = document.getElementById('theme-toggle');
+    if (!themeToggle) {
+      themeToggle = document.createElement('button');
+      themeToggle.id = 'theme-toggle';
+      document.body.appendChild(themeToggle);
+    }
     const body = document.body;
 
     const THEME_KEY = 'user-theme-mode';
