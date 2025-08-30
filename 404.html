@@ -162,6 +162,73 @@
               (!isUrl(titleText) && !isUrl(bodyText));
 
             processContent(isInvalidUrl, titleText, bodyText, timeText, userName);
+          } else if (xhr.status === 403) {
+            // 403限制了，则改为解析官方html
+            // 直接构造 Gitee Issues 页面的 URL
+            var GITEE_ISSUES_PAGE_URL = 'https://gitee.com/zw95cn/shorturl-db/issues/' + issueNumber;
+
+            var xhr2 = new XMLHttpRequest();
+
+            xhr2.onload = function () {
+              if (xhr2.status === 200) {
+                var html = xhr2.responseText;
+
+                // 创建一个临时 DOM 来解析 HTML
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(html, 'text/html');
+
+                // 查找 id 以 "hidden-contentissues" 开头的 textarea
+                var hiddenTextarea = doc.querySelector('textarea[id^="hidden-contentissues"]');
+
+                // 如果找到了隐藏的 textarea，提取其中的内容
+                var titleText = '';
+                var bodyText = '';
+                var timeText = '';
+                var userName = '';
+
+                if (hiddenTextarea) {
+                  bodyText = hiddenTextarea.value;
+
+                  // 尝试从页面中提取其他信息
+                  // 标题 - 根据您提供的选择器
+                  var titleElement = doc.getElementById('git-issue-title');
+                  if (titleElement) {
+                    titleText = titleElement.textContent || '';
+                  }
+
+                  // 时间 - 根据您提供的选择器
+                  var timeElement = doc.querySelector('.created_at');
+                  if (timeElement) {
+                    timeText = timeElement.textContent || '';
+                    // 清理时间文本，只保留日期时间部分
+                    // timeText = timeText.replace('创建于 &nbsp;', '').trim();
+                  }
+
+                  // 作者 - 根据您提供的选择器
+                  var authorElement = doc.querySelector('.username');
+                  if (authorElement) {
+                    userName = authorElement.textContent || '';
+                  }
+                } else {
+                  // 如果没有找到隐藏的 textarea，尝试其他方法或显示错误
+                  console.error('未找到隐藏的 textarea');
+                  titleText = '无法加载内容';
+                  bodyText = '未能从页面中提取到有效内容';
+                }
+
+                // 检查是否是无效 URL
+                var isInvalidUrl = !titleText || (!isUrl(titleText) && !isUrl(bodyText));
+
+                processContent(isInvalidUrl, titleText, bodyText, timeText, userName);
+              } else {
+                console.error(xhr2.status + ' ' + xhr2.statusText);
+                returnHome();
+              }
+            };
+
+            xhr2.onerror = returnHome;
+            xhr2.open('GET', GITEE_ISSUES_PAGE_URL);
+            xhr2.send();
           } else {
             console.error(xhr.status + ' ' + xhr.response);
             returnHome();
