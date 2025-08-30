@@ -1,264 +1,186 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./assets/favicon.ico" />
+    <title>短连接</title>
 
-<head>
-  <meta charset="utf-8" />
-  <link rel="icon" href="./assets/favicon.ico" />
-  <title>短连接</title>
+    <!-- 添加依赖库 -->
+    <script src="./libs/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="./libs/github-markdown-css/github-markdown.css" />
+    <script src="./libs/highlight.js/highlight.min.js"></script>
+    <!-- 浅色模式默认主题 -->
+    <link rel="stylesheet" href="./libs/highlight.js/styles/github.min.css" />
+    <!-- 深色模式覆盖主题 -->
+    <link rel="stylesheet" href="./libs/highlight.js/styles/github-dark.min.css" media="(prefers-color-scheme: dark)" />
+    <!-- 该页面自定义主题 -->
+    <link rel="stylesheet" href="./assets/css/base.css" />
+    <link rel="stylesheet" href="./assets/css/404.css" />
 
-  <!-- 添加依赖库 -->
-  <script src="../libs/marked/marked.min.js"></script>
-  <link rel="stylesheet" href="../libs/github-markdown-css/github-markdown.css">
-  <script src="../libs/highlight.js/highlight.min.js"></script>
-  <!-- 浅色模式默认主题 -->
-  <link rel="stylesheet" href="../libs/highlight.js/styles/github.min.css">
-  <!-- 深色模式覆盖主题 -->
-  <link rel="stylesheet" href="../libs/highlight.js/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
-  <!-- 该页面自定义主题 -->
-  <link rel="stylesheet" href="./assets/css/404.css">
+    <script>
+      // Markdown 配置
+      marked.setOptions({
+        breaks: true,
+        gfm: true,
+        sanitize: true,
+        highlight: function (code, lang) {
+          return hljs.highlightAuto(code).value;
+        },
+      });
 
-  <script>
-    // Markdown 配置
-    marked.setOptions({
-      breaks: true,
-      gfm: true,
-      sanitize: true,
-      highlight: function (code, lang) {
-        return hljs.highlightAuto(code).value;
+      var PATH_SEGMENTS_TO_SKIP = 0;
+
+      function isUrl(url) {
+        return /^[a-zA-z]+:\/\/[^\s]*$/.test(url);
       }
-    });
 
-    var PATH_SEGMENTS_TO_SKIP = 0;
+      function returnHome() {
+        window.location.replace(
+          location.protocol +
+            '//' +
+            location.hostname +
+            (location.port ? ':' + location.port : '') +
+            '/' +
+            location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP]
+        );
+      }
 
-    function isUrl(url) {
-      return /^[a-zA-z]+:\/\/[^\s]*$/.test(url);
-    }
+      function redirect() {
+        var GITEE_ISSUES_LINK = atob('aHR0cHM6Ly9naXRlZS5jb20vYXBpL3Y1L3JlcG9zL3p3OTVjbi9zaG9ydHVybC1kYi9pc3N1ZXMv');
+        var location = window.location;
+        var issueNumber = location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP + 1];
+        var xhr = new XMLHttpRequest();
 
-    function returnHome() {
-      window.location.replace(
-        location.protocol +
-        '//' +
-        location.hostname +
-        (location.port ? ':' + location.port : '') +
-        '/' +
-        location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP]
-      );
-    }
+        xhr.onload = function () {
+          // 原本执行主题切换处
 
-    function redirect() {
-      var GITEE_ISSUES_LINK = atob('aHR0cHM6Ly9naXRlZS5jb20vYXBpL3Y1L3JlcG9zL3p3OTVjbi9zaG9ydHVybC1kYi9pc3N1ZXMv');
-      var location = window.location;
-      var issueNumber = location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP + 1];
-      var xhr = new XMLHttpRequest();
+          if (xhr.status === 200) {
+            var payload = JSON.parse(xhr.response);
+            var message = payload.message;
+            var titleText = payload.title;
+            var bodyText = payload.body;
+            var timeText = payload.updated_at;
+            var userName = payload.user?.name || '';
 
-      xhr.onload = function () {
+            var isInvalidUrl =
+              message === 'Not Found' ||
+              message === 'This issue was deleted' ||
+              !titleText ||
+              (!isUrl(titleText) && !isUrl(bodyText));
 
-        // 处理颜色切换逻辑
-        let themeToggle = document.getElementById('theme-toggle');
-        if (!themeToggle) {
-          themeToggle = document.createElement('button');
-          themeToggle.id = 'theme-toggle';
-          document.body.appendChild(themeToggle);
-        }
-        const THEME_KEY = 'user-theme-mode';
-        const MODES = {
-          system: {
-            key: 'system',
-            icon: `<svg t="1756499037308" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15883" width="1.5rem" ><path d="M896 288h-64V256a96 96 0 0 0-96-96H160a96 96 0 0 0-96 96v384a96 96 0 0 0 96 96h448v32a96 96 0 0 0 96 96h192a96 96 0 0 0 96-96V384a96 96 0 0 0-96-96zM160 672a32 32 0 0 1-32-32V256a32 32 0 0 1 32-32h576a32 32 0 0 1 32 32v32h-64a96 96 0 0 0-96 96v288H160z m768 96a32 32 0 0 1-32 32h-192a32 32 0 0 1-32-32V384a32 32 0 0 1 32-32h192a32 32 0 0 1 32 32v384z m-384 64a32 32 0 0 1-32 32h-160a32 32 0 0 1 0-64h160a32 32 0 0 1 32 32z m320-384a32 32 0 0 1-32 32h-64a32 32 0 0 1 0-64h64a32 32 0 0 1 32 32z" p-id="15884"></path></svg>`
-          },
-          light: {
-            key: 'light',
-            icon: `<svg t="1756499294951" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16037" width="1.5rem"><path d="M480 160V64a32 32 0 0 1 64 0v96a32 32 0 0 1-64 0z m288 352a256 256 0 1 1-256-256 256.288 256.288 0 0 1 256 256z m-64 0a192 192 0 1 0-192 192 192.192 192.192 0 0 0 192-192zM233.376 278.624a32 32 0 1 0 45.248-45.28l-64-64a32 32 0 1 0-45.248 45.28l64 64z m0 466.72l-64 64a32 32 0 1 0 45.248 45.28l64-64a32 32 0 1 0-45.28-45.28zM768 288a32 32 0 0 0 22.624-9.376l64-64a32 32 0 0 0-45.28-45.248l-64 64A32 32 0 0 0 768 288z m22.624 457.376a32 32 0 1 0-45.28 45.28l64 64a32 32 0 0 0 45.28-45.28l-64-64zM192 512a32 32 0 0 0-32-32H64a32 32 0 0 0 0 64h96a32 32 0 0 0 32-32z m320 320a32 32 0 0 0-32 32v96a32 32 0 0 0 64 0v-96a32 32 0 0 0-32-32z m448-352h-96a32 32 0 0 0 0 64h96a32 32 0 0 0 0-64z" p-id="16038"></path></svg>`
-          },
-          dark: {
-            key: 'dark',
-            icon: `<svg t="1756499403868" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16191" width="1.5rem"><path d="M960 384a32 32 0 0 1-32 32h-64v64a32 32 0 1 1-64 0v-64h-64a32 32 0 0 1 0-64h64V288a32 32 0 0 1 64 0v64h64a32 32 0 0 1 32 32zM576 224h32v32a32 32 0 0 0 64 0V224h32a32 32 0 1 0 0-64h-32V128a32 32 0 1 0-64 0v32h-32a32 32 0 1 0 0 64z m291.072 388a32 32 0 0 1 5.728 32 384 384 0 1 1-492.512-492.8 32 32 0 0 1 42.4 36.256A352.224 352.224 0 0 0 836.544 601.28a32 32 0 0 1 30.528 10.688z m-77.568 59.52A416.448 416.448 0 0 1 352 256c0-7.168 0-14.368 0.576-21.536a320 320 0 1 0 436.928 436.96v0.096z" p-id="16192"></path></svg>`
+            if (isInvalidUrl) {
+              document.title = titleText;
+              let container = document.createElement('div');
+              container.className = 'container';
+
+              let divObj = document.createElement('div');
+              divObj.className = 'box';
+
+              let titleObj = document.createElement('h1');
+              titleObj.className = 'titleText';
+              titleObj.textContent = titleText;
+
+              // 创建元信息容器
+              let metaContainer = document.createElement('div');
+              metaContainer.className = 'meta-info';
+
+              // 时间元素
+              let timeObj = document.createElement('p');
+              timeObj.className = 'timeText';
+              let textTime = new Date(timeText);
+              timeObj.textContent = textTime.toLocaleString();
+
+              // 作者元素
+              let authorObj = document.createElement('span');
+              authorObj.className = 'authorText';
+              authorObj.textContent = userName ? `作者：${userName}` : '';
+
+              // 组装元素
+              metaContainer.appendChild(timeObj);
+              metaContainer.appendChild(authorObj);
+
+              let copyBtnObj = document.createElement('button');
+              copyBtnObj.className = 'copy-button';
+              copyBtnObj.title = '复制';
+              copyBtnObj.innerHTML =
+                '<svg t="1756500054955" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17081" width="1rem" ><path d="M864 128H352a32 32 0 0 0-32 32v160H160a32 32 0 0 0-32 32v512a32 32 0 0 0 32 32h512a32 32 0 0 0 32-32v-160h160a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z m-224 704H192V384h448v448z m192-192h-128v-288a32 32 0 0 0-32-32h-288V192h448v448z" p-id="17082"></path></svg>';
+              copyBtnObj.addEventListener('click', function () {
+                if (this.disabled) return;
+                this.disabled = true;
+
+                const rawText = document.querySelector('.markdown-body').dataset.raw;
+
+                const textarea = document.createElement('textarea');
+                textarea.value = rawText;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+
+                var originHTML = this.innerHTML;
+                var originBackgroundColor = this.innerHTML;
+
+                this.innerHTML =
+                  '<svg t="1756499921384" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16807" width="1rem" ><path d="M918.656 310.656l-512 512a32.032 32.032 0 0 1-45.28 0l-224-224a32 32 0 1 1 45.28-45.28L384 754.72 873.376 265.376a32 32 0 1 1 45.28 45.28z" p-id="16808" fill="#34A853"></path></svg>';
+                this.querySelector("svg.icon")?.classList.add('icon-success');
+                setTimeout(() => {
+                  this.classList.remove('icon-success');
+                this.querySelector("svg.icon")?.classList.remove('icon-success');
+                  this.innerHTML = originHTML;
+                  this.disabled = false;
+                }, 1000);
+              });
+
+              let bodyObj = document.createElement('div');
+              bodyObj.className = 'markdown-body';
+              bodyObj.innerHTML = marked.parse(bodyText);
+              bodyObj.dataset.raw = bodyText; // 保存原始文本
+
+              divObj.appendChild(titleObj);
+              divObj.appendChild(metaContainer);
+              divObj.appendChild(copyBtnObj);
+              divObj.appendChild(bodyObj);
+
+              container.appendChild(divObj);
+              document.body.appendChild(container);
+
+              // 代码高亮
+              hljs.highlightAll();
+            } else {
+              document.title = '跳转中...';
+              isUrl(titleText) ? location.replace(titleText) : location.replace(bodyText);
+            }
+          } else {
+            console.error(xhr.status + ' ' + xhr.response);
+            returnHome();
           }
         };
-        function getCurrentMode() {
-          const saved = localStorage.getItem(THEME_KEY);
-          if (saved && MODES[saved]) {
-            return saved;
-          }
-          return 'system'; // 默认
-        }
-        // 获取 highlight-dark.min.css 的 <link> 标签
-        function getHighlightDarkLink() {
-          const links = document.querySelectorAll('link[href*="github-dark.min.css"]');
-          for (let link of links) {
-            if (link.href.includes('github-dark.min.css')) {
-              return link;
-            }
-          }
-          return null;
-        }
-        // 应用主题（包含页面主题 + highlight.js 主题）
-        function applyTheme(mode) {
-          // 1. 处理页面主题：控制 body class
-          document.body.classList.remove('light-theme', 'dark-theme');
 
-          if (mode === 'light') {
-            document.body.classList.add('light-theme');
-          } else if (mode === 'dark') {
-            document.body.classList.add('dark-theme');
-          }
+        xhr.onerror = returnHome;
+        xhr.open('GET', GITEE_ISSUES_LINK + issueNumber);
+        xhr.send();
+      }
 
-          // 2. 处理 highlight.js 主题：动态修改 media 属性
-          const link = getHighlightDarkLink();
-          if (link) {
-            const modeData = MODES[mode];
-            if (modeData) {
-              // 根据模式设置 media 属性
-              if (mode === 'system') {
-                link.media = '(prefers-color-scheme: dark)'; // 跟随系统
-              } else if (mode === 'light') {
-                link.media = 'not all'; // 禁用深色高亮
-              } else if (mode === 'dark') {
-                link.media = 'all'; // 强制启用深色高亮
-              }
-            }
-          }
+      try {
+        redirect();
+      } catch (e) {
+        console.error(e);
+        returnHome();
+      }
+    </script>
+  </head>
 
-          // 3. 更新图标显示
-          const modeData = MODES[mode];
-          if (modeData && modeData.icon) {
-            themeToggle.innerHTML = modeData.icon;
-          }
-        }
-        function initTheme() {
-          const savedMode = getCurrentMode();
-          applyTheme(savedMode);
-        }
-        function cycleTheme() {
-          const current = getCurrentMode();
-
-          let next;
-          if (current === 'system') next = 'light';
-          else if (current === 'light') next = 'dark';
-          else next = 'system';
-
-          localStorage.setItem(THEME_KEY, next);
-          applyTheme(next);
-        }
-        themeToggle.addEventListener('click', cycleTheme);
-        initTheme();
-        // 处理颜色切换逻辑结束
-
-        if (xhr.status === 200) {
-          var payload = JSON.parse(xhr.response);
-          var message = payload.message;
-          var titleText = payload.title;
-          var bodyText = payload.body;
-          var timeText = payload.updated_at;
-          var userName = payload.user?.name || '';
-
-          var isInvalidUrl = message === 'Not Found' ||
-            message === 'This issue was deleted' ||
-            !titleText ||
-            (!isUrl(titleText) && !isUrl(bodyText));
-
-          if (isInvalidUrl) {
-            document.title = titleText;
-            let container = document.createElement('div');
-            container.className = 'container';
-
-            let divObj = document.createElement('div');
-            divObj.className = 'box';
-
-            let titleObj = document.createElement('h1');
-            titleObj.className = 'titleText';
-            titleObj.textContent = titleText;
-
-            // 创建元信息容器
-            let metaContainer = document.createElement('div');
-            metaContainer.className = 'meta-info';
-
-            // 时间元素
-            let timeObj = document.createElement('p');
-            timeObj.className = 'timeText';
-            let textTime = new Date(timeText);
-            timeObj.textContent = textTime.toLocaleString();
-
-            // 作者元素
-            let authorObj = document.createElement('span');
-            authorObj.className = 'authorText';
-            authorObj.textContent = userName ? `作者：${userName}` : '';
-
-            // 组装元素
-            metaContainer.appendChild(timeObj);
-            metaContainer.appendChild(authorObj);
-
-            let copyBtnObj = document.createElement('button');
-            copyBtnObj.className = 'copy-button';
-            copyBtnObj.title = '复制';
-            copyBtnObj.innerHTML = '<svg t="1756500054955" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17081" width="1rem" ><path d="M864 128H352a32 32 0 0 0-32 32v160H160a32 32 0 0 0-32 32v512a32 32 0 0 0 32 32h512a32 32 0 0 0 32-32v-160h160a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z m-224 704H192V384h448v448z m192-192h-128v-288a32 32 0 0 0-32-32h-288V192h448v448z" p-id="17082"></path></svg>';
-            copyBtnObj.addEventListener('click', function () {
-              if (this.disabled) return;
-              this.disabled = true;
-
-              const rawText = document.querySelector(".markdown-body").dataset.raw;
-
-              const textarea = document.createElement("textarea");
-              textarea.value = rawText;
-              document.body.appendChild(textarea);
-              textarea.select();
-              document.execCommand("copy");
-              document.body.removeChild(textarea);
-
-              var originHTML = this.innerHTML;
-              var originBackgroundColor = this.innerHTML;
-
-              this.style.color = 'var(--success-text)';
-              this.innerHTML = '<svg t="1756499921384" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16807" width="1rem" ><path d="M918.656 310.656l-512 512a32.032 32.032 0 0 1-45.28 0l-224-224a32 32 0 1 1 45.28-45.28L384 754.72 873.376 265.376a32 32 0 1 1 45.28 45.28z" p-id="16808" fill="#34A853"></path></svg>';
-              setTimeout(() => {
-                this.innerHTML = originHTML;
-                this.style.color = '';
-                this.disabled = false;
-              }, 1000);
-
-            });
-
-            let bodyObj = document.createElement('div');
-            bodyObj.className = 'markdown-body';
-            bodyObj.innerHTML = marked.parse(bodyText);
-            bodyObj.dataset.raw = bodyText; // 保存原始文本
-
-            divObj.appendChild(titleObj);
-            divObj.appendChild(metaContainer);
-            divObj.appendChild(copyBtnObj);
-            divObj.appendChild(bodyObj);
-
-            container.appendChild(divObj);
-            document.body.appendChild(container);
-
-            // 代码高亮
-            hljs.highlightAll();
-          } else {
-            document.title = '跳转中...';
-            isUrl(titleText) ? location.replace(titleText) : location.replace(bodyText);
-          }
-        } else {
-          console.error(xhr.status + ' ' + xhr.response);
-          returnHome();
-        }
-      };
-
-      xhr.onerror = returnHome;
-      xhr.open('GET', GITEE_ISSUES_LINK + issueNumber);
-      xhr.send();
-    }
-
-    try {
-
-      redirect();
-    } catch (e) {
-      console.error(e);
-      returnHome();
-    }
-  </script>
-</head>
-
-<body>
-</body>
-
+  <body>
+    <div id="toolbar">
+      <button title="github" onclick="window.open('/I6T1C5', '_blank')">
+        <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15737">
+          <path
+            d="M833.248 302.72a239.04 239.04 0 0 0-21.536-190.72 31.968 31.968 0 0 0-27.712-16 239.008 239.008 0 0 0-192 96h-96a238.976 238.976 0 0 0-192-96 32 32 0 0 0-27.712 16 239.104 239.104 0 0 0-21.536 190.72A232.576 232.576 0 0 0 224 416v32a224.256 224.256 0 0 0 193.76 221.888A159.232 159.232 0 0 0 384 768v32H288a96 96 0 0 1-96-96 160 160 0 0 0-160-160 32 32 0 1 0 0 64 96 96 0 0 1 96 96 160 160 0 0 0 160 160h96v64a32 32 0 0 0 64 0v-160a96 96 0 0 1 192 0v160a32 32 0 0 0 64 0v-160c0-35.552-11.84-70.08-33.76-98.112A224.224 224.224 0 0 0 864 448v-32a232.544 232.544 0 0 0-30.752-113.28zM800 448a160 160 0 0 1-160 160h-192a160 160 0 0 1-160-160v-32c0.384-32 9.984-63.2 27.616-89.92A32 32 0 0 0 320 295.328a175.232 175.232 0 0 1 3.168-134.336 175.52 175.52 0 0 1 129.28 80.256 31.968 31.968 0 0 0 26.816 14.752h129.408a32 32 0 0 0 26.976-14.752 175.488 175.488 0 0 1 129.28-80.256A175.2 175.2 0 0 1 768 295.36a32.32 32.32 0 0 0 4 30.592c17.792 26.72 27.52 57.984 28 90.08v32z"
+            p-id="15738"></path>
+        </svg>
+      </button>
+    </div>
+  </body>
+  <script src="./libs/theme-switch/theme-switch.js"></script>
+  <script src="./libs/func/func.js"></script>
 </html>

@@ -1,0 +1,101 @@
+(function () {
+  // 处理颜色切换逻辑
+  let themeToggle = document.getElementById('theme-toggle');
+  let toolbar = document.getElementById('toolbar');
+  if (!themeToggle) {
+    themeToggle = document.createElement('button');
+    themeToggle.id = 'theme-toggle';
+  }
+  if (!toolbar) {
+    toolbar = document.createElement('div');
+    toolbar.id = 'toolbar';
+  }
+  toolbar.appendChild(themeToggle);
+  const THEME_KEY = 'user-theme-mode';
+  const MODES = {
+    system: {
+      tip: '跟随系统',
+      key: 'system',
+      icon: `<svg t="1756499037308" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="15883" width="1.5rem" ><path d="M896 288h-64V256a96 96 0 0 0-96-96H160a96 96 0 0 0-96 96v384a96 96 0 0 0 96 96h448v32a96 96 0 0 0 96 96h192a96 96 0 0 0 96-96V384a96 96 0 0 0-96-96zM160 672a32 32 0 0 1-32-32V256a32 32 0 0 1 32-32h576a32 32 0 0 1 32 32v32h-64a96 96 0 0 0-96 96v288H160z m768 96a32 32 0 0 1-32 32h-192a32 32 0 0 1-32-32V384a32 32 0 0 1 32-32h192a32 32 0 0 1 32 32v384z m-384 64a32 32 0 0 1-32 32h-160a32 32 0 0 1 0-64h160a32 32 0 0 1 32 32z m320-384a32 32 0 0 1-32 32h-64a32 32 0 0 1 0-64h64a32 32 0 0 1 32 32z" p-id="15884"></path></svg>`,
+    },
+    light: {
+      tip: '浅色',
+      key: 'light',
+      icon: `<svg t="1756499294951" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16037" width="1.5rem"><path d="M480 160V64a32 32 0 0 1 64 0v96a32 32 0 0 1-64 0z m288 352a256 256 0 1 1-256-256 256.288 256.288 0 0 1 256 256z m-64 0a192 192 0 1 0-192 192 192.192 192.192 0 0 0 192-192zM233.376 278.624a32 32 0 1 0 45.248-45.28l-64-64a32 32 0 1 0-45.248 45.28l64 64z m0 466.72l-64 64a32 32 0 1 0 45.248 45.28l64-64a32 32 0 1 0-45.28-45.28zM768 288a32 32 0 0 0 22.624-9.376l64-64a32 32 0 0 0-45.28-45.248l-64 64A32 32 0 0 0 768 288z m22.624 457.376a32 32 0 1 0-45.28 45.28l64 64a32 32 0 0 0 45.28-45.28l-64-64zM192 512a32 32 0 0 0-32-32H64a32 32 0 0 0 0 64h96a32 32 0 0 0 32-32z m320 320a32 32 0 0 0-32 32v96a32 32 0 0 0 64 0v-96a32 32 0 0 0-32-32z m448-352h-96a32 32 0 0 0 0 64h96a32 32 0 0 0 0-64z" p-id="16038"></path></svg>`,
+    },
+    dark: {
+      tip: '深色',
+      key: 'dark',
+      icon: `<svg t="1756499403868" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16191" width="1.5rem"><path d="M960 384a32 32 0 0 1-32 32h-64v64a32 32 0 1 1-64 0v-64h-64a32 32 0 0 1 0-64h64V288a32 32 0 0 1 64 0v64h64a32 32 0 0 1 32 32zM576 224h32v32a32 32 0 0 0 64 0V224h32a32 32 0 1 0 0-64h-32V128a32 32 0 1 0-64 0v32h-32a32 32 0 1 0 0 64z m291.072 388a32 32 0 0 1 5.728 32 384 384 0 1 1-492.512-492.8 32 32 0 0 1 42.4 36.256A352.224 352.224 0 0 0 836.544 601.28a32 32 0 0 1 30.528 10.688z m-77.568 59.52A416.448 416.448 0 0 1 352 256c0-7.168 0-14.368 0.576-21.536a320 320 0 1 0 436.928 436.96v0.096z" p-id="16192"></path></svg>`,
+    },
+  };
+  function getCurrentMode() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved && MODES[saved]) {
+      return saved;
+    }
+    return 'system'; // 默认
+  }
+  // 获取 highlight-dark.min.css 的 <link> 标签
+  function getHighlightDarkLink() {
+    const links = document.querySelectorAll('link[href*="github-dark.min.css"]');
+    for (let link of links) {
+      if (link.href.includes('github-dark.min.css')) {
+        return link;
+      }
+    }
+    return null;
+  }
+  // 应用主题（包含页面主题 + highlight.js 主题）
+  function applyTheme(mode) {
+    // 1. 处理页面主题：控制 body class
+    document.body.classList.remove('light-theme', 'dark-theme');
+
+    if (mode === 'light') {
+      document.body.classList.add('light-theme');
+    } else if (mode === 'dark') {
+      document.body.classList.add('dark-theme');
+    }
+
+    // 2. 处理 highlight.js 主题：动态修改 media 属性
+    const link = getHighlightDarkLink();
+    if (link) {
+      const modeData = MODES[mode];
+      if (modeData) {
+        // 根据模式设置 media 属性
+        if (mode === 'system') {
+          link.media = '(prefers-color-scheme: dark)'; // 跟随系统
+        } else if (mode === 'light') {
+          link.media = 'not all'; // 禁用深色高亮
+        } else if (mode === 'dark') {
+          link.media = 'all'; // 强制启用深色高亮
+        }
+      }
+    }
+
+    // 3. 更新图标显示
+    const modeData = MODES[mode];
+    if (modeData && modeData.icon) {
+      themeToggle.innerHTML = modeData.icon;
+      themeToggle.title = '当前主题色：' + modeData.tip;
+    }
+  }
+  function initTheme() {
+    const savedMode = getCurrentMode();
+    applyTheme(savedMode);
+  }
+  function cycleTheme() {
+    const current = getCurrentMode();
+
+    let next;
+    if (current === 'system') next = 'light';
+    else if (current === 'light') next = 'dark';
+    else next = 'system';
+
+    localStorage.setItem(THEME_KEY, next);
+    applyTheme(next);
+  }
+  themeToggle.addEventListener('click', cycleTheme);
+  initTheme();
+  // 处理颜色切换逻辑结束
+})();
