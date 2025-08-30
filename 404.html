@@ -44,10 +44,104 @@
         );
       }
 
+      function processContent(isInvalidUrl, titleText, bodyText, timeText, userName) {
+        if (isInvalidUrl) {
+          document.title = titleText;
+          let container = document.createElement('div');
+          container.className = 'container';
+
+          let divObj = document.createElement('div');
+          divObj.className = 'box';
+
+          let titleObj = document.createElement('h1');
+          titleObj.className = 'titleText';
+          titleObj.textContent = titleText;
+
+          // 创建元信息容器
+          let metaContainer = document.createElement('div');
+          metaContainer.className = 'meta-info';
+
+          // 时间元素
+          let timeObj = document.createElement('p');
+          timeObj.className = 'timeText';
+          let textTime = new Date(timeText);
+          timeObj.textContent = textTime.toLocaleString();
+
+          // 作者元素
+          let authorObj = document.createElement('span');
+          authorObj.className = 'authorText';
+          authorObj.textContent = userName ? `作者：${userName}` : '';
+
+          // 组装元素
+          metaContainer.appendChild(timeObj);
+          metaContainer.appendChild(authorObj);
+
+          let bodyObj = document.createElement('div');
+          bodyObj.className = 'markdown-body';
+          bodyObj.innerHTML = marked.parse(bodyText);
+          bodyObj.dataset.raw = bodyText; // 保存原始文本
+
+          divObj.appendChild(titleObj);
+          divObj.appendChild(metaContainer);
+          divObj.appendChild(bodyObj);
+
+          container.appendChild(divObj);
+          document.body.appendChild(container);
+
+          let toolbar = document.getElementById('toolbar');
+          if (toolbar) {
+            let copyBtnObj = document.createElement('button');
+            copyBtnObj.className = 'copy-button';
+            copyBtnObj.title = '复制全文';
+            copyBtnObj.innerHTML =
+              '<svg t="1756500054955" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17081" width="1rem" ><path d="M864 128H352a32 32 0 0 0-32 32v160H160a32 32 0 0 0-32 32v512a32 32 0 0 0 32 32h512a32 32 0 0 0 32-32v-160h160a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z m-224 704H192V384h448v448z m192-192h-128v-288a32 32 0 0 0-32-32h-288V192h448v448z" p-id="17082"></path></svg>';
+            copyBtnObj.addEventListener('click', function () {
+              if (this.disabled) return;
+              this.disabled = true;
+
+              const rawText = document.querySelector('.markdown-body').dataset.raw;
+
+              const textarea = document.createElement('textarea');
+              textarea.value = rawText;
+              document.body.appendChild(textarea);
+              textarea.select();
+              document.execCommand('copy');
+              document.body.removeChild(textarea);
+
+              var originHTML = this.innerHTML;
+              var originBackgroundColor = this.innerHTML;
+
+              this.innerHTML =
+                '<svg t="1756499921384" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16807" width="1rem" ><path d="M918.656 310.656l-512 512a32.032 32.032 0 0 1-45.28 0l-224-224a32 32 0 1 1 45.28-45.28L384 754.72 873.376 265.376a32 32 0 1 1 45.28 45.28z" p-id="16808" fill="#34A853"></path></svg>';
+              this.querySelector('svg.icon')?.classList.add('icon-success');
+              setTimeout(() => {
+                this.classList.remove('icon-success');
+                this.querySelector('svg.icon')?.classList.remove('icon-success');
+                this.innerHTML = originHTML;
+                this.disabled = false;
+              }, 1000);
+            });
+            toolbar.appendChild(copyBtnObj);
+          }
+
+          // 代码高亮
+          hljs.highlightAll();
+        } else {
+          document.title = '跳转中...';
+          var url = isUrl(titleText) ? titleText : bodyText;
+
+          let linkToBox = document.createElement('div');
+          linkToBox.classList.add('link-to-box');
+          linkToBox.innerHTML = `<span class="title">跳转中...</span><span class="subTitle"><a href="${url}" target="_blank">${url}</a></span>`;
+          document.body.appendChild(linkToBox);
+          location.replace(url);
+        }
+      }
+
       function redirect() {
-        var GITEE_ISSUES_LINK = atob('aHR0cHM6Ly9naXRlZS5jb20vYXBpL3Y1L3JlcG9zL3p3OTVjbi9zaG9ydHVybC1kYi9pc3N1ZXMv');
         var location = window.location;
         var issueNumber = location.pathname.split('/')[PATH_SEGMENTS_TO_SKIP + 1];
+        var GITEE_ISSUE_API_URL = atob('aHR0cHM6Ly9naXRlZS5jb20vYXBpL3Y1L3JlcG9zL3p3OTVjbi9zaG9ydHVybC1kYi9pc3N1ZXMv') + issueNumber;
         var xhr = new XMLHttpRequest();
 
         xhr.onload = function () {
@@ -67,97 +161,74 @@
               !titleText ||
               (!isUrl(titleText) && !isUrl(bodyText));
 
-            if (isInvalidUrl) {
-              document.title = titleText;
-              let container = document.createElement('div');
-              container.className = 'container';
+            processContent(isInvalidUrl, titleText, bodyText, timeText, userName);
+          } else if (xhr.status === 403) {
+            // 403限制了，则改为解析官方html
+            // 直接构造 Gitee Issues 页面的 URL
+            var GITEE_ISSUES_PAGE_URL = 'https://gitee.com/zw95cn/shorturl-db/issues/' + issueNumber;
 
-              let divObj = document.createElement('div');
-              divObj.className = 'box';
+            var xhr = new XMLHttpRequest();
 
-              let titleObj = document.createElement('h1');
-              titleObj.className = 'titleText';
-              titleObj.textContent = titleText;
+            xhr.onload = function () {
+              if (xhr.status === 200) {
+                var html = xhr.responseText;
 
-              // 创建元信息容器
-              let metaContainer = document.createElement('div');
-              metaContainer.className = 'meta-info';
+                // 创建一个临时 DOM 来解析 HTML
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(html, 'text/html');
 
-              // 时间元素
-              let timeObj = document.createElement('p');
-              timeObj.className = 'timeText';
-              let textTime = new Date(timeText);
-              timeObj.textContent = textTime.toLocaleString();
+                // 查找 id 以 "hidden-contentissues" 开头的 textarea
+                var hiddenTextarea = doc.querySelector('textarea[id^="hidden-contentissues"]');
 
-              // 作者元素
-              let authorObj = document.createElement('span');
-              authorObj.className = 'authorText';
-              authorObj.textContent = userName ? `作者：${userName}` : '';
+                // 如果找到了隐藏的 textarea，提取其中的内容
+                var titleText = '';
+                var bodyText = '';
+                var timeText = '';
+                var userName = '';
 
-              // 组装元素
-              metaContainer.appendChild(timeObj);
-              metaContainer.appendChild(authorObj);
+                if (hiddenTextarea) {
+                  bodyText = hiddenTextarea.value;
 
-              let bodyObj = document.createElement('div');
-              bodyObj.className = 'markdown-body';
-              bodyObj.innerHTML = marked.parse(bodyText);
-              bodyObj.dataset.raw = bodyText; // 保存原始文本
+                  // 尝试从页面中提取其他信息
+                  // 标题 - 根据您提供的选择器
+                  var titleElement = doc.getElementById('git-issue-title');
+                  if (titleElement) {
+                    titleText = titleElement.textContent || '';
+                  }
 
-              divObj.appendChild(titleObj);
-              divObj.appendChild(metaContainer);
-              divObj.appendChild(bodyObj);
+                  // 时间 - 根据您提供的选择器
+                  var timeElement = doc.querySelector('.created_at');
+                  if (timeElement) {
+                    timeText = timeElement.textContent || '';
+                    // 清理时间文本，只保留日期时间部分
+                    // timeText = timeText.replace('创建于 &nbsp;', '').trim();
+                  }
 
-              container.appendChild(divObj);
-              document.body.appendChild(container);
+                  // 作者 - 根据您提供的选择器
+                  var authorElement = doc.querySelector('.username');
+                  if (authorElement) {
+                    userName = authorElement.textContent || '';
+                  }
+                } else {
+                  // 如果没有找到隐藏的 textarea，尝试其他方法或显示错误
+                  console.error('未找到隐藏的 textarea');
+                  titleText = '无法加载内容';
+                  bodyText = '未能从页面中提取到有效内容';
+                }
 
-              let toolbar = document.getElementById('toolbar');
-              if (toolbar) {
-                let copyBtnObj = document.createElement('button');
-                copyBtnObj.className = 'copy-button';
-                copyBtnObj.title = '复制全文';
-                copyBtnObj.innerHTML =
-                  '<svg t="1756500054955" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17081" width="1rem" ><path d="M864 128H352a32 32 0 0 0-32 32v160H160a32 32 0 0 0-32 32v512a32 32 0 0 0 32 32h512a32 32 0 0 0 32-32v-160h160a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z m-224 704H192V384h448v448z m192-192h-128v-288a32 32 0 0 0-32-32h-288V192h448v448z" p-id="17082"></path></svg>';
-                copyBtnObj.addEventListener('click', function () {
-                  if (this.disabled) return;
-                  this.disabled = true;
+                // 检查是否是无效 URL
+                var isInvalidUrl = !titleText || (!isUrl(titleText) && !isUrl(bodyText));
 
-                  const rawText = document.querySelector('.markdown-body').dataset.raw;
-
-                  const textarea = document.createElement('textarea');
-                  textarea.value = rawText;
-                  document.body.appendChild(textarea);
-                  textarea.select();
-                  document.execCommand('copy');
-                  document.body.removeChild(textarea);
-
-                  var originHTML = this.innerHTML;
-                  var originBackgroundColor = this.innerHTML;
-
-                  this.innerHTML =
-                    '<svg t="1756499921384" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16807" width="1rem" ><path d="M918.656 310.656l-512 512a32.032 32.032 0 0 1-45.28 0l-224-224a32 32 0 1 1 45.28-45.28L384 754.72 873.376 265.376a32 32 0 1 1 45.28 45.28z" p-id="16808" fill="#34A853"></path></svg>';
-                  this.querySelector('svg.icon')?.classList.add('icon-success');
-                  setTimeout(() => {
-                    this.classList.remove('icon-success');
-                    this.querySelector('svg.icon')?.classList.remove('icon-success');
-                    this.innerHTML = originHTML;
-                    this.disabled = false;
-                  }, 1000);
-                });
-                toolbar.appendChild(copyBtnObj);
+                processContent(isInvalidUrl, titleText, bodyText, timeText, userName);
+              } else {
+                console.error(xhr.status + ' ' + xhr.statusText);
+                returnHome();
               }
+            };
 
-              // 代码高亮
-              hljs.highlightAll();
-            } else {
-              document.title = '跳转中...';
-              var url = isUrl(titleText) ? titleText : bodyText;
-
-              let linkToBox = document.createElement('div');
-              linkToBox.classList.add('link-to-box');
-              linkToBox.innerHTML = `<span class="title">跳转中...</span><span class="subTitle"><a href="${url}" target="_blank">${url}</a></span>`;
-              document.body.appendChild(linkToBox);
-              location.replace(url);
-            }
+            xhr.onerror = returnHome;
+            xhr.open('GET', GITEE_ISSUES_PAGE_URL);
+            xhr.send();
           } else {
             console.error(xhr.status + ' ' + xhr.response);
             returnHome();
@@ -165,7 +236,7 @@
         };
 
         xhr.onerror = returnHome;
-        xhr.open('GET', GITEE_ISSUES_LINK + issueNumber);
+        xhr.open('GET', GITEE_ISSUE_API_URL);
         xhr.send();
       }
 
