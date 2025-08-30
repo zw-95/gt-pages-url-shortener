@@ -147,7 +147,7 @@
               hljs.highlightAll();
             } else {
               document.title = '跳转中...';
-              var url = isUrl(titleText) ? location.replace(titleText) : location.replace(bodyText);
+              var url = isUrl(titleText) ? titleText : bodyText;
 
               let linkToBox = document.createElement('div');
               linkToBox.classList.add("link-to-box");
