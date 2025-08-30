@@ -151,7 +151,7 @@
 
               let linkToBox = document.createElement('div');
               linkToBox.classList.add("link-to-box");
-              document.body.innerHTML = `<span class="title">跳转中...</span><span class="subTitle"><a href="${url}" target="_blank">${url}</a></span>`;
+              linkToBox.innerHTML = `<span class="title">跳转中...</span><span class="subTitle"><a href="${url}" target="_blank">${url}</a></span>`;
               document.body.appendChild(linkToBox);
               location.replace(url);
             }
