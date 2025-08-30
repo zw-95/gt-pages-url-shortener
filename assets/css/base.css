@@ -42,7 +42,7 @@
     --title-color: #e0e0e0;
     --text-color: #cccccc;
     --secondary-text: #909090;
-    --code-bg: #2d2d2d;
+    --code-bg: #30363d;
     --border-color: #404040;
     --shadow-main: 0 5px 15px 0 rgba(0, 0, 0, 0.4);
     --shadow-hover: 0 5px 5px 0 rgba(0, 0, 0, 0.4);
@@ -75,7 +75,7 @@ body.dark-theme {
   --title-color: #e0e0e0;
   --text-color: #cccccc;
   --secondary-text: #909090;
-  --code-bg: #2d2d2d;
+  --code-bg: #30363d#30363d;
   --border-color: #404040;
   --shadow-main: 0 5px 15px 0 rgba(0, 0, 0, 0.4);
   --shadow-hover: 0 5px 5px 0 rgba(0, 0, 0, 0.4);
