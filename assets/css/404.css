@@ -6,7 +6,8 @@
 .box {
   margin: 2rem 0;
   padding: 1rem !important;
-  background: linear-gradient(135deg, var(--card-bg-start), var(--card-bg-end));
+  /* background: linear-gradient(135deg, var(--card-bg-start), var(--card-bg-end)); */
+  background-color: var(--card-bg-start);
   border-radius: 10px;
   box-shadow: var(--shadow-main);
   transition: all 0.3s ease;
@@ -69,6 +70,9 @@
   overflow-x: auto;
   transition: background-color 0.3s ease;
   position: relative;
+  white-space: pre-wrap !important;
+  word-break: break-all !important;
+  word-wrap: break-word !important;
 }
 
 .markdown-body code {

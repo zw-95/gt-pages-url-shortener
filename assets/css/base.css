@@ -153,6 +153,7 @@ button {
   transition: all 0.3s ease;
   align-items: center;
   color: var(--secondary-text);
+  padding: 3px 6px;
 }
 
 button:hover {
@@ -181,9 +182,10 @@ button:hover {
 }
 #toolbar {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  gap: 1rem;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  gap: 5px;
 }
 
 #theme-toggle {
