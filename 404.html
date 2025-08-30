@@ -167,11 +167,11 @@
             // 直接构造 Gitee Issues 页面的 URL
             var GITEE_ISSUES_PAGE_URL = 'https://gitee.com/zw95cn/shorturl-db/issues/' + issueNumber;
 
-            var xhr = new XMLHttpRequest();
+            var xhr2 = new XMLHttpRequest();
 
-            xhr.onload = function () {
-              if (xhr.status === 200) {
-                var html = xhr.responseText;
+            xhr2.onload = function () {
+              if (xhr2.status === 200) {
+                var html = xhr2.responseText;
 
                 // 创建一个临时 DOM 来解析 HTML
                 var parser = new DOMParser();
@@ -221,14 +221,14 @@
 
                 processContent(isInvalidUrl, titleText, bodyText, timeText, userName);
               } else {
-                console.error(xhr.status + ' ' + xhr.statusText);
+                console.error(xhr2.status + ' ' + xhr2.statusText);
                 returnHome();
               }
             };
 
-            xhr.onerror = returnHome;
-            xhr.open('GET', GITEE_ISSUES_PAGE_URL);
-            xhr.send();
+            xhr2.onerror = returnHome;
+            xhr2.open('GET', GITEE_ISSUES_PAGE_URL);
+            xhr2.send();
           } else {
             console.error(xhr.status + ' ' + xhr.response);
             returnHome();
