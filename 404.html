@@ -121,10 +121,10 @@
 
                 this.innerHTML =
                   '<svg t="1756499921384" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16807" width="1rem" ><path d="M918.656 310.656l-512 512a32.032 32.032 0 0 1-45.28 0l-224-224a32 32 0 1 1 45.28-45.28L384 754.72 873.376 265.376a32 32 0 1 1 45.28 45.28z" p-id="16808" fill="#34A853"></path></svg>';
-                this.querySelector("svg.icon")?.classList.add('icon-success');
+                this.querySelector('svg.icon')?.classList.add('icon-success');
                 setTimeout(() => {
                   this.classList.remove('icon-success');
-                this.querySelector("svg.icon")?.classList.remove('icon-success');
+                  this.querySelector('svg.icon')?.classList.remove('icon-success');
                   this.innerHTML = originHTML;
                   this.disabled = false;
                 }, 1000);
@@ -137,11 +137,13 @@
 
               divObj.appendChild(titleObj);
               divObj.appendChild(metaContainer);
-              divObj.appendChild(copyBtnObj);
               divObj.appendChild(bodyObj);
 
               container.appendChild(divObj);
               document.body.appendChild(container);
+
+              let toolbar = document.getElementById('toolbar');
+              if (toolbar) toolbar.appendChild(copyBtnObj);
 
               // 代码高亮
               hljs.highlightAll();
@@ -150,7 +152,7 @@
               var url = isUrl(titleText) ? titleText : bodyText;
 
               let linkToBox = document.createElement('div');
-              linkToBox.classList.add("link-to-box");
+              linkToBox.classList.add('link-to-box');
               linkToBox.innerHTML = `<span class="title">跳转中...</span><span class="subTitle"><a href="${url}" target="_blank">${url}</a></span>`;
               document.body.appendChild(linkToBox);
               location.replace(url);

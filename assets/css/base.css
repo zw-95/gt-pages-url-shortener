@@ -188,4 +188,7 @@ button:hover {
   left: 15px;
   display: flex;
   gap: 5px;
+  padding: 5px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
 }
