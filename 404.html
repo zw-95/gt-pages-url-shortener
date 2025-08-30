@@ -123,12 +123,7 @@
 
                   const rawText = document.querySelector('.markdown-body').dataset.raw;
 
-                  const textarea = document.createElement('textarea');
-                  textarea.value = rawText;
-                  document.body.appendChild(textarea);
-                  textarea.select();
-                  document.execCommand('copy');
-                  document.body.removeChild(textarea);
+                  copyRichText(rawText);
 
                   var originHTML = this.innerHTML;
                   var originBackgroundColor = this.innerHTML;
