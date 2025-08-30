@@ -147,7 +147,13 @@
               hljs.highlightAll();
             } else {
               document.title = '跳转中...';
-              isUrl(titleText) ? location.replace(titleText) : location.replace(bodyText);
+              var url = isUrl(titleText) ? location.replace(titleText) : location.replace(bodyText);
+
+              let linkToBox = document.createElement('div');
+              linkToBox.classList.add("link-to-box");
+              document.body.innerHTML = `<span class="title">跳转中...</span><span class="subTitle"><a href="${url}" target="_blank">${url}</a></span>`;
+              document.body.appendChild(linkToBox);
+              location.replace(url);
             }
           } else {
             console.error(xhr.status + ' ' + xhr.response);
