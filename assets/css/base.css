@@ -183,7 +183,7 @@ button:hover {
   fill: var(--error-text) !important;
 }
 #toolbar {
-  position: absolute;
+  position: fixed;
   top: 15px;
   left: 15px;
   display: flex;
