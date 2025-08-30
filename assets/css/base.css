@@ -154,6 +154,8 @@ button {
   align-items: center;
   color: var(--secondary-text);
   padding: 3px 6px;
+  display: flex;
+  align-items: center;
 }
 
 button:hover {

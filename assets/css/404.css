@@ -46,13 +46,9 @@
   color: var(--secondary-text);
   font-style: italic;
 }
-
+/* 复制全文按钮 */
 .copy-button {
   float: right;
-  height: 24px;
-  line-height: 25px;
-  display: flex;
-  font-size: 12px;
 }
 
 .markdown-body {
