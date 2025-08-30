@@ -98,38 +98,6 @@
               metaContainer.appendChild(timeObj);
               metaContainer.appendChild(authorObj);
 
-              let copyBtnObj = document.createElement('button');
-              copyBtnObj.className = 'copy-button';
-              copyBtnObj.title = '复制全文';
-              copyBtnObj.innerHTML =
-                '<svg t="1756500054955" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17081" width="1rem" ><path d="M864 128H352a32 32 0 0 0-32 32v160H160a32 32 0 0 0-32 32v512a32 32 0 0 0 32 32h512a32 32 0 0 0 32-32v-160h160a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z m-224 704H192V384h448v448z m192-192h-128v-288a32 32 0 0 0-32-32h-288V192h448v448z" p-id="17082"></path></svg>';
-              copyBtnObj.addEventListener('click', function () {
-                if (this.disabled) return;
-                this.disabled = true;
-
-                const rawText = document.querySelector('.markdown-body').dataset.raw;
-
-                const textarea = document.createElement('textarea');
-                textarea.value = rawText;
-                document.body.appendChild(textarea);
-                textarea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textarea);
-
-                var originHTML = this.innerHTML;
-                var originBackgroundColor = this.innerHTML;
-
-                this.innerHTML =
-                  '<svg t="1756499921384" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16807" width="1rem" ><path d="M918.656 310.656l-512 512a32.032 32.032 0 0 1-45.28 0l-224-224a32 32 0 1 1 45.28-45.28L384 754.72 873.376 265.376a32 32 0 1 1 45.28 45.28z" p-id="16808" fill="#34A853"></path></svg>';
-                this.querySelector('svg.icon')?.classList.add('icon-success');
-                setTimeout(() => {
-                  this.classList.remove('icon-success');
-                  this.querySelector('svg.icon')?.classList.remove('icon-success');
-                  this.innerHTML = originHTML;
-                  this.disabled = false;
-                }, 1000);
-              });
-
               let bodyObj = document.createElement('div');
               bodyObj.className = 'markdown-body';
               bodyObj.innerHTML = marked.parse(bodyText);
@@ -143,7 +111,40 @@
               document.body.appendChild(container);
 
               let toolbar = document.getElementById('toolbar');
-              if (toolbar) toolbar.appendChild(copyBtnObj);
+              if (toolbar) {
+                let copyBtnObj = document.createElement('button');
+                copyBtnObj.className = 'copy-button';
+                copyBtnObj.title = '复制全文';
+                copyBtnObj.innerHTML =
+                  '<svg t="1756500054955" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17081" width="1rem" ><path d="M864 128H352a32 32 0 0 0-32 32v160H160a32 32 0 0 0-32 32v512a32 32 0 0 0 32 32h512a32 32 0 0 0 32-32v-160h160a32 32 0 0 0 32-32V160a32 32 0 0 0-32-32z m-224 704H192V384h448v448z m192-192h-128v-288a32 32 0 0 0-32-32h-288V192h448v448z" p-id="17082"></path></svg>';
+                copyBtnObj.addEventListener('click', function () {
+                  if (this.disabled) return;
+                  this.disabled = true;
+
+                  const rawText = document.querySelector('.markdown-body').dataset.raw;
+
+                  const textarea = document.createElement('textarea');
+                  textarea.value = rawText;
+                  document.body.appendChild(textarea);
+                  textarea.select();
+                  document.execCommand('copy');
+                  document.body.removeChild(textarea);
+
+                  var originHTML = this.innerHTML;
+                  var originBackgroundColor = this.innerHTML;
+
+                  this.innerHTML =
+                    '<svg t="1756499921384" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16807" width="1rem" ><path d="M918.656 310.656l-512 512a32.032 32.032 0 0 1-45.28 0l-224-224a32 32 0 1 1 45.28-45.28L384 754.72 873.376 265.376a32 32 0 1 1 45.28 45.28z" p-id="16808" fill="#34A853"></path></svg>';
+                  this.querySelector('svg.icon')?.classList.add('icon-success');
+                  setTimeout(() => {
+                    this.classList.remove('icon-success');
+                    this.querySelector('svg.icon')?.classList.remove('icon-success');
+                    this.innerHTML = originHTML;
+                    this.disabled = false;
+                  }, 1000);
+                });
+                toolbar.appendChild(copyBtnObj);
+              }
 
               // 代码高亮
               hljs.highlightAll();
