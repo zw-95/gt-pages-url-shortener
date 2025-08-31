@@ -129,6 +129,7 @@
           hljs.highlightAll();
         } else {
           document.title = '跳转中...';
+          document.body.style.justifyContent= 'flex-end';
           var url = isUrl(titleText) ? titleText : bodyText;
 
           let linkToBox = document.createElement('div');
