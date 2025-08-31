@@ -1,4 +1,4 @@
-// 
+//
 (function () {
   /**
    * 增强版 copyRichText，支持 Base64 图片
@@ -7,18 +7,19 @@
    * @returns {Promise<boolean>} 复制是否成功
    */
   async function copyRichText(content, options = {}) {
+    const isRawText = options?.isRawText || false;
     try {
       // 判断是否为 Base64 图片
       if (isBase64Image(content)) {
         return await copyBase64ImageAsHTML(content, options.altText || 'Image');
       }
 
-        // 普通富文本处理
-        if (navigator.clipboard && window.ClipboardItem) {
-          return await copyWithClipboardAPI(content);
-        }
+      // 普通富文本处理
+      if (navigator.clipboard && window.ClipboardItem) {
+        return await copyWithClipboardAPI(content, isRawText);
+      }
 
-        return copyWithExecCommand(content, options?.isRawText || false);
+      return copyWithExecCommand(content, isRawText);
     } catch (error) {
       console.error('复制失败:', error);
       return false;
@@ -63,7 +64,7 @@
       }
 
       // 回退方法
-      return copyWithExecCommand(htmlContent, true);
+      return copyWithExecCommand(htmlContent, false);
     } catch (error) {
       console.error('复制图片失败:', error);
       return false;
@@ -73,19 +74,24 @@
   /**
    * 使用 Clipboard API 复制
    */
-  async function copyWithClipboardAPI(content) {
-    const htmlBlob = new Blob([content], { type: 'text/html' });
-    const textContent = new DOMParser().parseFromString(content, 'text/html').body.textContent || '';
-    const textBlob = new Blob([textContent], { type: 'text/plain' });
+  async function copyWithClipboardAPI(content, isRawText = false) {
+    if (isRawText) {
+      await navigator.clipboard.writeText(content);
+      return true;
+    } else {
+      const htmlBlob = new Blob([content], { type: 'text/html' });
+      const textContent = new DOMParser().parseFromString(content, 'text/html').body.textContent || '';
+      const textBlob = new Blob([textContent], { type: 'text/plain' });
 
-    await navigator.clipboard.write([
-      new ClipboardItem({
-        'text/html': htmlBlob,
-        'text/plain': textBlob,
-      }),
-    ]);
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          'text/html': htmlBlob,
+          'text/plain': textBlob,
+        }),
+      ]);
 
-    return true;
+      return true;
+    }
   }
 
   /**
@@ -113,9 +119,9 @@
       element.style.opacity = '0';
       // 为了让富文本样式生效，可以设置 contenteditable，但非必须
     }
-  
+
     document.body.appendChild(element);
-  
+
     try {
       if (isRawText) {
         // 纯文本：直接选中并复制
@@ -129,7 +135,7 @@
         selection.removeAllRanges();
         selection.addRange(range);
       }
-  
+
       // 执行复制命令
       const successful = document.execCommand('copy');
       return successful;
@@ -178,17 +184,17 @@
 
         // 执行复制
         const codeText = codeBlock.textContent || codeBlock.innerText;
-        copyRichText(codeText, {isRawText:true});
+        copyRichText(codeText, { isRawText: true });
 
         // 改变样式
         var originHTML = this.innerHTML;
         this.innerHTML =
           '<svg t="1756499921384" class="icon icon-small" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16807" width="1rem" ><path d="M918.656 310.656l-512 512a32.032 32.032 0 0 1-45.28 0l-224-224a32 32 0 1 1 45.28-45.28L384 754.72 873.376 265.376a32 32 0 1 1 45.28 45.28z" p-id="16808" fill="#34A853"></path></svg>';
-        this.querySelector("svg.icon")?.classList.add('icon-success');
+        this.querySelector('svg.icon')?.classList.add('icon-success');
         // 恢复样式
         setTimeout(() => {
           this.innerHTML = originHTML;
-          this.querySelector("svg.icon")?.classList.remove('icon-success');
+          this.querySelector('svg.icon')?.classList.remove('icon-success');
           this.style.color = '';
           this.disabled = false;
         }, 1000);
@@ -201,4 +207,5 @@
   } else {
     waitForPreCode();
   }
+  window.copyRichText = copyRichText;
 })();
