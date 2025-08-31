@@ -163,8 +163,3 @@ pre button.copy-code-btn {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#toolbar{
-  position: sticky;
-  margin-top: 2rem;
-  margin-right: 1rem;
-}
