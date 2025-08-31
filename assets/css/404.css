@@ -1,12 +1,14 @@
 .container {
-  max-width: 980px;
-  margin: 0 auto;
+  max-width: 80vw;
+  width: 60rem;
+  display: flex;
+  flex-direction: row;
+  padding-right: calc(2vw + 22px);
 }
 
 .box {
-  margin: 2rem 0;
+margin: 2rem 0;
   padding: 1rem !important;
-  /* background: linear-gradient(135deg, var(--card-bg-start), var(--card-bg-end)); */
   background-color: var(--card-bg-start);
   border-radius: 10px;
   box-shadow: var(--shadow-main);
@@ -160,4 +162,9 @@ pre button.copy-code-btn {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+#toolbar{
+  position: sticky;
+  margin-top: 2rem;
+  margin-right: 1rem;
 }

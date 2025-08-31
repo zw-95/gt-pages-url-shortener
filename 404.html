@@ -85,11 +85,12 @@
           divObj.appendChild(titleObj);
           divObj.appendChild(metaContainer);
           divObj.appendChild(bodyObj);
+          let toolbar = document.getElementById('toolbar');
 
+          container.appendChild(toolbar);
           container.appendChild(divObj);
           document.body.appendChild(container);
 
-          let toolbar = document.getElementById('toolbar');
           if (toolbar) {
             let copyBtnObj = document.createElement('button');
             copyBtnObj.className = 'copy-button';

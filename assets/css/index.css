@@ -1,3 +1,6 @@
+body{
+  justify-content: flex-end;
+}
 .not-found {
   display: flex;
   flex-direction: column;

@@ -139,7 +139,7 @@ body {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   margin: 0;
   position: relative;
   transition: background-color 0.5s ease, color 0.5s ease;
@@ -193,4 +193,11 @@ button:hover {
   padding: 5px;
   border-radius: 15px;
   transition: all 0.3s ease;
+  background-color: var(--card-bg-start);
+  flex-direction: column;
+  height: fit-content;
+  box-shadow: var(--shadow-main);
+}
+#toolbar:hover {
+  box-shadow: var(--shadow-hover);
 }
