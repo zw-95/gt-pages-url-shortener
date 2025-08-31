@@ -21,10 +21,9 @@
 
 .titleText {
   font-size: 2em !important;
-  border-bottom: 1px solid var(--border-color);
   padding: 0 2% 0.3em !important;
-  margin: 0 0 1em;
   color: var(--title-color);
+  margin: 0;
 }
 
 .timeText {
@@ -39,8 +38,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2%;
-  margin: 0 0 1em;
+  padding: 0;
+  margin: 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .authorText {
@@ -54,6 +54,7 @@
 }
 
 .markdown-body {
+  margin-top: 1rem;
   font-family: var(--font-family);
   padding: 0 2% !important;
   background: transparent !important;
