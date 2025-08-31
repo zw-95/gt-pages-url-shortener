@@ -165,10 +165,12 @@ button:hover {
 .icon {
   fill: var(--secondary-text) !important;
   transition: all 0.3s ease;
-  width: 1.5rem;
+  width: 1.5vw;
+  min-width: 1.5rem;
 }
 .icon-small {
-  width: 1rem;
+  width: 1vw;
+  min-width: 1rem;
 }
 .icon-success {
   fill: var(--success-text) !important;
